@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Portal PCM · Multilixo (PDF)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  /* PDF/PRINT layout — render all pages stacked, one per page */
+  :root { --sb-w: 0px; }
+  body {
+    background: #fff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .sidebar { display: none !important; }
+  .main { margin-left: 0 !important; }
+
+  /* Each page becomes a print page */
+  .pdf-page {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0;
+    break-after: page;
+    page-break-after: always;
+    position: relative;
+  }
+  .pdf-page:last-child { break-after: auto; page-break-after: auto; }
+
+  .pdf-section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 56px 14px;
+    border-bottom: 2px solid var(--purple-800);
+    background: linear-gradient(90deg, #faf8f5 0%, #fff 100%);
+  }
+  .pdf-section-title .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--purple-700);
+    font-weight: 600;
+  }
+  .pdf-section-title .name {
+    font-family: 'Plus Jakarta Sans';
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--purple-800);
+  }
+
+  /* Cover page */
+  .pdf-cover {
+    height: 100vh;
+    min-height: 1100px;
+    background: linear-gradient(135deg, #2a1150 0%, #3d1e6d 50%, #4e2a85 100%);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 80px 80px 60px;
+    position: relative;
+    overflow: hidden;
+    break-after: page;
+    page-break-after: always;
+  }
+  .pdf-cover::before {
+    content: '';
+    position: absolute;
+    right: -100px; top: -100px;
+    width: 480px; height: 480px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(240,138,42,0.4), transparent 70%);
+  }
+  .pdf-cover::after {
+    content: '';
+    position: absolute;
+    left: -80px; bottom: -80px;
+    width: 360px; height: 360px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(167,211,42,0.3), transparent 70%);
+  }
+  .pdf-cover-top {
+    position: relative; z-index: 2;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .pdf-cover-top .logo {
+    width: 64px; height: 64px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pdf-cover-top .logo img { width: 100%; height: 100%; object-fit: contain; }
+  .pdf-cover-top .nm { font-family: 'Plus Jakarta Sans'; font-weight: 800; font-size: 22px; }
+  .pdf-cover-top .sb { font-size: 13px; opacity: 0.7; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  .pdf-cover-mid { position: relative; z-index: 2; }
+  .pdf-cover-mid .eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .pdf-cover-mid .eyebrow .dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--lime);
+  }
+  .pdf-cover-mid h1 {
+    font-family: 'Plus Jakarta Sans';
+    font-size: 96px;
+    line-height: 0.95;
+    color: #fff;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 28px;
+  }
+  .pdf-cover-mid h1 .a { color: var(--orange); }
+  .pdf-cover-mid h1 .b { color: var(--lime); }
+  .pdf-cover-mid p {
+    color: rgba(255,255,255,0.82);
+    font-size: 22px;
+    max-width: 720px;
+    line-height: 1.4;
+  }
+
+  .pdf-cover-toc {
+    position: relative; z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 32px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+  }
+  .pdf-cover-toc .item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 8px 0;
+    font-size: 14px;
+    color: rgba(255,255,255,0.85);
+  }
+  .pdf-cover-toc .num {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--orange);
+    font-weight: 600;
+    width: 28px;
+  }
+  .pdf-cover-toc .ttl { font-weight: 600; color: #fff; }
+
+  /* Page tweaks for print readability */
+  .page { padding: 28px 56px 48px !important; max-width: 100% !important; }
+  .page-header { margin-bottom: 24px !important; }
+  .page-header h1 { font-size: 36px !important; }
+
+  /* Hide hero animations in print */
+  .truck.t-drive { animation: none !important; }
+  .road-stripe { animation: none !important; }
+  .hero-grid-lines { animation: none !important; }
+  .pdf-page .hero { height: 480px; }
+  .pdf-page .hero-content h1 { font-size: 56px !important; }
+
+  /* Page setup for printing */
+  @page {
+    size: A3 portrait;
+    margin: 0;
+  }
+  @media print {
+    body { margin: 0; }
+    .card, .ql-card, .pop-card, .mapro-card, .bi-card, .tl-card, .pillar, .pdf-cover, .about-hero, .proj-card, .team-card {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .reveal { opacity: 1 !important; transform: none !important; }
+  }
+  .reveal { opacity: 1 !important; transform: none !important; }
+
+  /* Footer mark */
+  .pdf-footer {
+    padding: 16px 56px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="src/icons.jsx"></script>
+<script type="text/babel" src="src/primitives.jsx"></script>
+<script type="text/babel" src="src/sidebar.jsx"></script>
+<script type="text/babel" src="src/hero.jsx"></script>
+<script type="text/babel" src="src/pages-core.jsx"></script>
+<script type="text/babel" src="src/pages-extra.jsx"></script>
+
+<script type="text/babel">
+const PRINT_PAGES = [
+  { id: 'home',        num: '01', name: 'Início',              Comp: () => <HomePage onNav={()=>{}} blocks={[]} addBlock={()=>{}} /> },
+  { id: 'pcm',         num: '02', name: 'PCM',                 Comp: () => <PCMPage /> },
+  { id: 'pops',        num: '03', name: 'POPs',                Comp: () => <POPsPage /> },
+  { id: 'mapros',      num: '04', name: 'MAPROs',              Comp: () => <MAPROsPage /> },
+  { id: 'indicadores', num: '05', name: 'Indicadores · Power BI', Comp: () => <IndicadoresPage /> },
+  { id: 'novidades',   num: '06', name: 'Novidades',           Comp: () => <NovidadesPage /> },
+  { id: 'equipe',      num: '07', name: 'Equipe',              Comp: () => <EquipePage /> },
+  { id: 'projetos',    num: '08', name: 'Projetos Entregues',  Comp: () => <ProjetosPage /> },
+  { id: 'iniciativas', num: '09', name: 'Iniciativas',         Comp: () => <IniciativasPage /> },
+  { id: 'quemsomos',   num: '10', name: 'Quem Somos',          Comp: () => <QuemSomosPage /> },
+];
+
+const Cover = () => (
+  <div className="pdf-cover">
+    <div className="pdf-cover-top">
+      <div className="logo"><img src="assets/pcm-logo.png" alt="PCM" /></div>
+      <div>
+        <div className="nm">Portal PCM</div>
+        <div className="sb">Multilixo · Manutenção Automotiva</div>
+      </div>
+    </div>
+    <div className="pdf-cover-mid">
+      <div className="eyebrow"><span className="dot"></span>Documento institucional · 2026</div>
+      <h1>Portal <span className="a">PCM</span><br/>Multilixo<span className="b">.</span></h1>
+      <p>Centro digital de Planejamento e Controle da Manutenção — POPs, MAPROs, indicadores em tempo real, novidades da equipe e iniciativas que reduzem MTTR e elevam disponibilidade da frota.</p>
+    </div>
+    <div className="pdf-cover-toc">
+      {PRINT_PAGES.map(p => (
+        <div className="item" key={p.id}>
+          <span className="num">{p.num}</span>
+          <span className="ttl">{p.name}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const PrintApp = () => (
+  <>
+    <Cover />
+    {PRINT_PAGES.map(p => {
+      const C = p.Comp;
+      return (
+        <div className="pdf-page" key={p.id}>
+          <div className="pdf-section-title">
+            <span className="lbl">{p.num} — Portal PCM Multilixo</span>
+            <span className="name">{p.name}</span>
+          </div>
+          <C />
+          <div className="pdf-footer">
+            <span>Multilixo · PCM</span>
+            <span>{p.num} / {String(PRINT_PAGES.length).padStart(2,'0')}</span>
+          </div>
+        </div>
+      );
+    })}
+  </>
+);
+
+ReactDOM.createRoot(document.getElementById('root')).render(<PrintApp />);
+
+// Auto-print after fonts + babel are ready
+(async () => {
+  try { await document.fonts.ready; } catch (e) {}
+  await new Promise(r => setTimeout(r, 1200));
+  window.print();
+})();
+</script>
+</body>
+</html>
