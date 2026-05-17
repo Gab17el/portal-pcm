@@ -1,0 +1,506 @@
+// Quem Somos, Projetos, Iniciativas, Novidades, Equipe — with detail views and attachments
+var React = window.React;
+const { useState, useEffect } = React;
+
+const QuemSomosPage = () => {
+  const [siteUrl, setSiteUrl] = useState(() => localStorage.getItem('pcm.qs.site') || 'https://www.grupomultilixo.com.br/');
+  const [editing, setEditing] = useState(false);
+  const [tmp, setTmp] = useState(siteUrl);
+  const saveSite = () => {
+    let v = (tmp||'').trim();
+    if (v && !/^https?:\/\//i.test(v)) v = 'https://' + v;
+    setSiteUrl(v); localStorage.setItem('pcm.qs.site', v); setEditing(false);
+  };
+  const [embedSite, setEmbedSite] = useState(() => localStorage.getItem('pcm.qs.embed') === '1');
+  const toggleEmbed = (v) => { setEmbedSite(v); localStorage.setItem('pcm.qs.embed', v?'1':'0'); };
+
+  const companies = [
+    { n: 'Multilixo',       d: 'Gestão de Resíduos' },
+    { n: 'Flacipel',        d: 'Reciclagem' },
+    { n: 'Multi Bioenergia',d: 'Reciclagem de Madeira' },
+    { n: 'UTGR',            d: 'Gestão de Aterro' },
+    { n: 'BIOBR',           d: 'Resíduos em Energia Limpa' },
+    { n: 'Trata Entulho',   d: 'Resíduos da Construção Civil' },
+    { n: 'Multi UVR',       d: 'Reciclagem Energética' },
+    { n: 'UR Florestal',    d: 'Reflorestamento' },
+    { n: 'Multi Cultivo',   d: 'Compostagem' },
+    { n: 'TWM Ambiental',   d: 'Resíduos Perigosos' },
+  ];
+
+  return (
+  <div className="page">
+    <Reveal>
+      <div className="qs-hero qs-hero-tight">
+        <div className="qs-hero-text">
+          <div className="eyebrow">Quem Somos</div>
+          <h2>Papel fundamental no <span style={{color:'var(--orange)'}}>futuro</span> das próximas gerações.</h2>
+          <p>O Grupo Multilixo é formado por <strong>10 empresas, 100% familiar</strong>, com mais de <strong>30 anos</strong> no mercado brasileiro. Líder na gestão de resíduos e o maior grupo de logística circular de São Paulo.</p>
+          <p>Fundado em 1993 com a <strong>Flacipel</strong> e em 1996 com a <strong>Multilixo</strong>, o grupo cresceu unindo eficiência ambiental, impacto social e resultado.</p>
+          <div style={{display:'flex',gap:10,marginTop:20,flexWrap:'wrap',alignItems:'center'}}>
+            <a className="btn btn-primary btn-sm" href={siteUrl} target="_blank" rel="noreferrer"><Icon name="link" size={14}/> Site institucional</a>
+            <button className="btn btn-outline btn-sm" onClick={()=>{setTmp(siteUrl);setEditing(true);}}><Icon name="edit" size={14}/> Editar URL</button>
+            <label style={{display:'flex',alignItems:'center',gap:6,fontSize:13,color:'var(--ink-2)',cursor:'pointer'}}>
+              <input type="checkbox" checked={embedSite} onChange={e=>toggleEmbed(e.target.checked)} /> Incorporar site na página
+            </label>
+          </div>
+          {editing && (
+            <div style={{marginTop:12,display:'flex',gap:8}}>
+              <input value={tmp} onChange={e=>setTmp(e.target.value)} placeholder="https://www.grupomultilixo.com.br/" style={{flex:1,padding:'8px 12px',border:'1px solid var(--line)',borderRadius:8,fontSize:13}}/>
+              <button className="btn btn-solid btn-sm" onClick={saveSite}>Salvar</button>
+            </div>
+          )}
+        </div>
+
+        <div className="qs-diagram qs-diagram-tight">
+          <div className="qs-feature-logo">
+            <div className="qs-feature-logo-ring">
+              <img src="assets/multilixo-logo.png" alt="Grupo Multilixo" />
+            </div>
+            <div className="qs-feature-stat">
+              <div className="qs-feature-num">10</div>
+              <div className="qs-feature-lbl">Empresas<br/>do grupo</div>
+            </div>
+          </div>
+          <div className="qs-co-grid">
+            {companies.map((c) => (
+              <div key={c.n} className="qs-co-card">
+                <div className="qs-co-dot" />
+                <div className="qs-co-info">
+                  <div className="qs-co-n">{c.n}</div>
+                  <div className="qs-co-d">{c.d}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </Reveal>
+
+    {embedSite && (
+      <div className="section">
+        <SectionHead eyebrow="Site institucional" title="Grupo Multilixo · ao vivo" right={<a className="btn btn-outline btn-sm" href={siteUrl} target="_blank" rel="noreferrer"><Icon name="link" size={14}/> Abrir em nova aba</a>} />
+        <div className="qs-embed">
+          <iframe src={siteUrl} title="Site Grupo Multilixo" />
+        </div>
+        <p style={{fontSize:12,color:'var(--ink-3)',marginTop:8}}>Caso o site não carregue dentro do iframe (alguns sites bloqueiam), use o botão acima.</p>
+      </div>
+    )}
+
+    <div className="section">
+      <SectionHead eyebrow="Os números" title="Multilixo em escala" />
+      <div className="grid grid-4">
+        <KPI icon="clock" val="+30" lbl="Anos de mercado" tone="p" />
+        <KPI icon="truck" val="+1.200" lbl="Caminhões" tone="o" />
+        <KPI icon="users" val="+8.000" lbl="Clientes ativos" tone="l" />
+        <KPI icon="target" val="+9.000" lbl="Pontos diários" tone="p" />
+      </div>
+    </div>
+
+    <div className="section">
+      <SectionHead eyebrow="Nossos pilares" title="O que nos move" />
+      <div className="about-pillars">
+        {[
+          { i:'shield', t:'Honestidade', d:'Integridade e transparência em tudo que fazemos.' },
+          { i:'target', t:'Responsabilidade', d:'Foco em resultado e compromisso com o prazo.' },
+          { i:'trend', t:'Eficiência', d:'Excelência em cada entrega, do planejamento à rua.' },
+          { i:'leaf', t:'Sustentabilidade', d:'Cuidamos do planeta — é o nosso ofício.' },
+        ].map((p,i) => (
+          <Reveal key={p.t} delay={i*80}>
+            <div className="pillar">
+              <div className="ico"><Icon name={p.i} size={22}/></div>
+              <h4>{p.t}</h4>
+              <p>{p.d}</p>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </div>
+
+    <div className="section">
+      <FreeContentBoard storageKey="pcm.quemsomos.free" title="Mais conteúdo institucional" subtitle="Adicione apresentações, vídeos, links, PDFs, fotos — qualquer material sobre o grupo." />
+    </div>
+  </div>
+  );
+};
+
+// Generic detail panel for an item with attachments
+const DetailPanel = ({ item, onClose, kind }) => {
+  if (!item) return null;
+  return (
+    <div className="card" style={{padding:'32px 36px',marginBottom:32,border:'1px solid var(--purple-100)',boxShadow:'var(--shadow-md)'}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:16,marginBottom:18}}>
+        <div>
+          <div style={{fontFamily:'JetBrains Mono',fontSize:11,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--purple-700)',fontWeight:500,marginBottom:8}}>{kind} · {item.date || item.s || 'Detalhes'}</div>
+          <h2 style={{fontSize:28,marginBottom:6}}>{item.t || item.title}</h2>
+          {item.who && <div style={{fontSize:13,color:'var(--ink-3)'}}>Por <strong style={{color:'var(--ink)'}}>{item.who}</strong> · {item.area}</div>}
+        </div>
+        <button className="btn btn-ghost btn-sm" style={{background:'var(--surface-2)',color:'var(--ink)',border:'1px solid var(--line)'}} onClick={onClose}><Icon name="x" size={14}/> Fechar</button>
+      </div>
+
+      <p style={{fontSize:15,color:'var(--ink-2)',marginBottom:22,lineHeight:1.6}}>{item.full || item.b || item.d || item.desc}</p>
+
+      {item.imp && (
+        <div style={{padding:'14px 18px',background:'var(--surface-2)',borderRadius:10,borderLeft:`3px solid var(--orange)`,marginBottom:22}}>
+          <div style={{fontFamily:'JetBrains Mono',fontSize:10,letterSpacing:'0.1em',textTransform:'uppercase',color:'var(--ink-3)',fontWeight:600}}>Impacto</div>
+          <div style={{fontSize:15,fontWeight:600,marginTop:2}}>{item.imp}</div>
+        </div>
+      )}
+
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14,marginTop:6}}>
+        <h3 style={{fontSize:16,fontWeight:700}}>Evidências e arquivos</h3>
+        <button className="btn btn-outline btn-sm"><Icon name="upload" size={14}/> Anexar</button>
+      </div>
+      <div className="grid grid-2" style={{gap:12}}>
+        {(item.files || [
+          { ft:'PDF', n:'Apresentação.pdf', s:'1.4 MB' },
+          { ft:'XLS', n:'Plano-de-acao.xlsx', s:'320 KB' },
+          { ft:'IMG', n:'Foto-evidencia-01.jpg', s:'2.1 MB' },
+        ]).map((f,i) => (
+          <div key={i} className="card pop-card hover" style={{padding:'14px 16px'}}>
+            <div className="ft-ico" style={{width:36,height:36,fontSize:10}}>{f.ft}</div>
+            <div className="body">
+              <div className="title" style={{fontSize:14}}>{f.n}</div>
+              <div className="meta"><span>{f.s}</span></div>
+            </div>
+            <div className="dl"><Icon name="download" size={14}/> Abrir</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const ProjetosPage = () => {
+  const [filter, setFilter] = useState('Todos');
+  const [open, setOpen] = useState(false);
+  const [focused, setFocused] = useState(null);
+  const cats = ['Todos', 'Concluído', 'Em andamento', 'Planejado'];
+  const projects = [
+    { s:'Concluído', cls:'', t:'Digitalização dos MAPROs', d:'Migração de todos os mapas de processo da manutenção para o portal digital, com busca e versionamento.', full:'Projeto que centralizou +30 mapas de processo da manutenção em uma única biblioteca digital, com versionamento, busca e categorias. Substituiu o uso de pastas físicas e arquivos espalhados em e-mails.', imp:'100% dos processos acessíveis online', who:'Gabriel Santos', area:'PCM', tone:'p', files:[{ft:'PDF',n:'MAPROs-consolidados.pdf',s:'8.2 MB'},{ft:'XLS',n:'Inventario-processos.xlsx',s:'410 KB'}] },
+    { s:'Concluído', cls:'', t:'Follow-up diário SGM', d:'Rotina diária de checagem dos caminhões e máquinas, com indicadores em tempo real.', full:'Implementação de uma rotina diária de 30 minutos onde toda a equipe revisa o status da frota, prioriza ações e atualiza os indicadores. Reduziu drasticamente o tempo de reação a problemas.', imp:'Redução de 38% no tempo de reação', who:'Equipe PCM', area:'PCM + Operação', tone:'o' },
+    { s:'Concluído', cls:'', t:'Dashboard Manutenção 360', d:'Painel Power BI consolidando custos, SLA, backlog e disponibilidade em tela única.', full:'Dashboard executivo Power BI que une dados de manutenção, frota, telemetria e custos em uma única visão. Usado nas reuniões de liderança semanais.', imp:'Visão única para toda a liderança', who:'Gabriel Santos', area:'PCM', tone:'l' },
+    { s:'Em andamento', cls:'ip', t:'Telemetria integrada', d:'Integração dos dados de telemetria da frota com o sistema de manutenção preditiva.', full:'Em curso: integração dos dados de telemetria (consumo, frenagem, tempo ocioso) com o sistema de manutenção, permitindo gatilhos preditivos.', imp:'130 caminhões já integrados', who:'Gabriel Santos', area:'PCM + TI', tone:'p' },
+    { s:'Em andamento', cls:'ip', t:'Padronização dos POPs', d:'Revisão de todos os procedimentos operacionais e unificação de formatos.', full:'Revisão de todos os 60+ POPs da manutenção, unificando formato, criando capa padrão, adicionando fluxograma e validando com a equipe técnica.', imp:'62% dos POPs revisados', who:'Equipe PCM', area:'PCM', tone:'o' },
+    { s:'Planejado', cls:'pl', t:'Gestão de peças por criticidade', d:'Novo processo de compras com classificação ABC por criticidade de parada.', full:'Projeto futuro: classificar todas as peças do estoque por criticidade (impacto na parada da frota), redefinindo políticas de compra, ressuprimento e segurança.', imp:'Meta: -25% em ruptura de estoque', who:'PCM + Compras', area:'Cross-funcional', tone:'l' },
+  ];
+  const filtered = projects.filter(p => filter === 'Todos' || p.s === filter);
+
+  return (
+    <div className="page">
+      <div className="page-header">
+        <div>
+          <div className="eyebrow">O que o PCM já entregou</div>
+          <h1>Projetos entregues</h1>
+          <p className="lead">Cada projeto com seu dono, descrição e impacto medido na operação. Clique em qualquer card para ver evidências e arquivos.</p>
+        </div>
+        <button className="btn btn-primary" onClick={() => setOpen(true)}><Icon name="plus" size={16}/> Novo projeto</button>
+      </div>
+
+      {focused && <DetailPanel item={focused} onClose={() => setFocused(null)} kind="Projeto" />}
+
+      <Toolbar>
+        <Chips options={cats} value={filter} onChange={setFilter} />
+      </Toolbar>
+
+      <div className="grid grid-3">
+        {filtered.map((p,i) => (
+          <Reveal key={i} delay={i*50}>
+            <div className={`card proj-card hover ${p.tone}`} style={{cursor:'pointer'}} onClick={() => setFocused(p)}>
+              <div className={`status ${p.cls}`}><span style={{width:6,height:6,borderRadius:'50%',background:'currentColor'}}></span>{p.s}</div>
+              <h3>{p.t}</h3>
+              <p className="desc">{p.d}</p>
+              <div className="impact">
+                <div className="lbl">Impacto</div>
+                <div className="val">{p.imp}</div>
+              </div>
+              <div className="owner">
+                <div className="av">{p.who.split(' ').map(x=>x[0]).slice(0,2).join('')}</div>
+                <div style={{flex:1}}>
+                  <div className="name">{p.who}</div>
+                  <div className="sub">{p.area}</div>
+                </div>
+                <div style={{color:'var(--purple-800)',fontSize:12,fontWeight:600,display:'inline-flex',alignItems:'center',gap:4}}>Ver <Icon name="arrow-right" size={12}/></div>
+              </div>
+            </div>
+          </Reveal>
+        ))}
+        <AddBlock label="Adicionar projeto" sub="Nome, descrição, dono, impacto" onClick={() => setOpen(true)} />
+      </div>
+
+      <Modal open={open} onClose={() => setOpen(false)} title="Novo projeto entregue">
+        <Field label="Nome do projeto"><input placeholder="Ex.: Automação da OS"/></Field>
+        <Field label="Descrição"><textarea placeholder="O que foi feito?"/></Field>
+        <Field label="Impacto"><input placeholder="Ex.: -30% em tempo de diagnóstico"/></Field>
+        <Field label="Responsável"><input placeholder="Nome · Área"/></Field>
+        <Field label="Evidências (arquivos)"><Dropzone /></Field>
+        <div className="modal-actions">
+          <button className="btn btn-ghost btn-sm" style={{background:'var(--surface-2)',color:'var(--ink)',border:'1px solid var(--line)'}} onClick={() => setOpen(false)}>Cancelar</button>
+          <button className="btn btn-solid btn-sm" onClick={() => setOpen(false)}>Salvar</button>
+        </div>
+      </Modal>
+
+      <div className="section" style={{marginTop:48}}>
+        <FreeContentBoard storageKey="pcm.projetos.free" title="Mais conteúdo de projetos" subtitle="Apresentações, dashboards, fotos, links — tudo o que apoia os projetos." />
+      </div>
+    </div>
+  );
+};
+
+const IniciativasPage = () => {
+  const [focused, setFocused] = useState(null);
+  const [open, setOpen] = useState(false);
+  const items = [
+    { t:'Quadro Visual da Oficina', d:'Implementação de quadro visual kanban para acompanhamento em tempo real das OS na oficina.', full:'Instalamos um quadro físico + digital de OS na oficina, com colunas: Fila → Em execução → Aguarda peça → Concluído. Toda a equipe contribui na atualização em tempo real, com fotos do antes/depois.', who:'Gabriel Santos', area:'Analista PCM', tone:'p' },
+    { t:'Check-list Digital do Motorista', d:'Migração do checklist em papel para formulário digital com fotos e GPS.', full:'O motorista preenche o checklist da partida pelo celular, anexando fotos do veículo. Os dados vão direto para o Power BI, permitindo análise de tendências e detecção de problemas recorrentes.', who:'Equipe PCM', area:'PCM', tone:'o' },
+    { t:'Integração Planilhas → Power BI', d:'Automatização da ingestão de dados das planilhas SGM no Power BI, sem digitação manual.', full:'Antes: planilhas SGM eram preenchidas manualmente e copiadas para outras bases. Agora: scripts Power Query automatizam a ingestão diretamente do SGM para o Power BI.', who:'Gabriel Santos', area:'Analista PCM', tone:'l' },
+    { t:'Padrão de Abertura de OS', d:'Criação de template único para abertura de OS, com campos obrigatórios e classificação.', full:'Criação de um padrão único de abertura de OS — campos obrigatórios, classificação ABC de criticidade e linkagem direta com o estoque de peças.', who:'Equipe PCM', area:'PCM', tone:'p' },
+    { t:'Ronda 5S Mensal', d:'Implantação de auditoria 5S mensal nas oficinas, com pontuação e plano de ação.', full:'Auditoria 5S mensal nas oficinas, com checklist objetivo, pontuação e plano de ação para cada item identificado. Resultados publicados na intranet.', who:'Gabriel Santos', area:'Analista PCM', tone:'o' },
+    { t:'Reunião Diária do PCM', d:'Rotina de 15 minutos toda manhã — backlog, prioridades, bloqueios.', full:'Stand-up diário de 15 minutos toda manhã às 7h30: backlog do dia, prioridades, bloqueios. Aumentou drasticamente a velocidade de resposta e a coesão da equipe.', who:'Equipe PCM', area:'PCM', tone:'l' },
+  ];
+
+  return (
+    <div className="page">
+      <div className="page-header">
+        <div>
+          <div className="eyebrow">Iniciativas do PCM</div>
+          <h1>Iniciativas internas</h1>
+          <p className="lead">Pequenas e grandes melhorias que nasceram dentro do PCM. Clique em qualquer card para ver detalhes e evidências.</p>
+        </div>
+        <button className="btn btn-primary" onClick={() => setOpen(true)}><Icon name="plus" size={16}/> Nova iniciativa</button>
+      </div>
+
+      {focused && <DetailPanel item={focused} onClose={() => setFocused(null)} kind="Iniciativa" />}
+
+      <div className="grid grid-3">
+        {items.map((it,i) => (
+          <Reveal key={i} delay={i*50}>
+            <div className={`card proj-card hover ${it.tone}`} style={{cursor:'pointer'}} onClick={() => setFocused(it)}>
+              <div className="status"><span style={{width:6,height:6,borderRadius:'50%',background:'currentColor'}}></span>Ativo</div>
+              <h3>{it.t}</h3>
+              <p className="desc">{it.d}</p>
+              <div className="owner">
+                <div className="av">{it.who.split(' ').map(x=>x[0]).slice(0,2).join('')}</div>
+                <div style={{flex:1}}>
+                  <div className="name">{it.who}</div>
+                  <div className="sub">{it.area}</div>
+                </div>
+                <div style={{color:'var(--purple-800)',fontSize:12,fontWeight:600,display:'inline-flex',alignItems:'center',gap:4}}>Ver <Icon name="arrow-right" size={12}/></div>
+              </div>
+            </div>
+          </Reveal>
+        ))}
+        <AddBlock label="Adicionar iniciativa" sub="Projeto interno, autor, descrição" onClick={() => setOpen(true)} />
+      </div>
+
+      <Modal open={open} onClose={() => setOpen(false)} title="Nova iniciativa">
+        <Field label="Nome"><input placeholder="Ex.: Padrão de etiquetagem de peças"/></Field>
+        <Field label="Descrição"><textarea placeholder="O que está sendo proposto?"/></Field>
+        <Field label="Responsável"><input placeholder="Nome · Área"/></Field>
+        <Field label="Evidências"><Dropzone /></Field>
+        <div className="modal-actions">
+          <button className="btn btn-ghost btn-sm" style={{background:'var(--surface-2)',color:'var(--ink)',border:'1px solid var(--line)'}} onClick={() => setOpen(false)}>Cancelar</button>
+          <button className="btn btn-solid btn-sm" onClick={() => setOpen(false)}>Salvar</button>
+        </div>
+      </Modal>
+
+      <div className="section" style={{marginTop:48}}>
+        <FreeContentBoard storageKey="pcm.iniciativas.free" title="Mais conteúdo de iniciativas" subtitle="Anote ideias, anexe propostas, links, estudos e qualquer material de apoio." />
+      </div>
+    </div>
+  );
+};
+
+const NovidadesPage = () => {
+  const [focused, setFocused] = useState(null);
+  const [open, setOpen] = useState(false);
+  const posts = [
+    { date:'22 ABR · 2026', t:'Digitalização dos MAPROs 100% concluída', b:'Todos os mapas de processo da manutenção agora estão disponíveis no portal, com busca, categorias e versionamento.', full:'Após 4 meses de trabalho, finalizamos a digitalização completa dos MAPROs. São +30 fluxos de processo agora disponíveis na biblioteca digital, com busca por nome e categoria, versionamento e download direto. As pastas físicas serão mantidas como backup pelos próximos 6 meses.', tone:'o' },
+    { date:'18 ABR · 2026', t:'Novo dashboard de telemetria ativo', b:'Gestão de boas práticas ao volante integrada ao Power BI — 130 caminhões já reportando em tempo real.', full:'O novo dashboard de telemetria já está no ar. Ele permite acompanhar consumo, frenagem brusca, aceleração brusca e tempo ocioso por caminhão, classe e filial. Inicialmente com 130 caminhões — meta é cobrir toda a frota até o fim do ano.', tone:'p' },
+    { date:'10 ABR · 2026', t:'Iniciativa: SGM Follow-up diário', b:'Rotina de acompanhamento diário de caminhões e máquinas oficialmente implantada em todas as filiais.', full:'A rotina de follow-up diário do SGM agora é oficial e roda em todas as filiais. 30 minutos pela manhã, com toda a equipe operacional, revisando status, prioridades e plano do dia.', tone:'l' },
+    { date:'28 MAR · 2026', t:'Reunião de Manutenção 360', b:'Apresentação da visão consolidada da manutenção para toda a liderança operacional.', full:'Realizamos a reunião trimestral Manutenção 360, apresentando à liderança operacional os principais indicadores: disponibilidade, MTTR, custo unitário e backlog. Resultados acima da meta em 4 dos 5 indicadores principais.', tone:'o' },
+    { date:'15 MAR · 2026', t:'Padronização de POPs iniciada', b:'Revisão de todos os procedimentos operacionais da manutenção começou esta semana.', full:'Iniciamos o projeto de padronização dos POPs. Todos serão revisados, atualizados, terão capa padrão e fluxograma. Meta: concluir 100% até julho/2026.', tone:'p' },
+    { date:'02 MAR · 2026', t:'Apresentação Manutenção 360 · 02.03', b:'Deck executivo com os principais indicadores do PCM e projeções para o próximo trimestre.', full:'Deck executivo Manutenção 360 — versão 02.03.2026. Apresentado aos diretores e gerentes regionais. Próxima edição em junho.', tone:'l' },
+  ];
+
+  return (
+    <div className="page">
+      <div className="page-header">
+        <div>
+          <div className="eyebrow">Feed do PCM</div>
+          <h1>Novidades</h1>
+          <p className="lead">O que está acontecendo no PCM. Clique em qualquer publicação para ver o conteúdo completo e os arquivos.</p>
+        </div>
+        <button className="btn btn-primary" onClick={() => setOpen(true)}><Icon name="plus" size={16}/> Publicar</button>
+      </div>
+
+      {focused && <DetailPanel item={focused} onClose={() => setFocused(null)} kind="Novidade" />}
+
+      <div className="timeline">
+        {posts.map((p,i) => (
+          <Reveal key={i} delay={i*60} className={`tl-item ${p.tone === 'p' ? 'p' : p.tone === 'l' ? 'l' : ''}`}>
+            <div className="tl-card hover" style={{cursor:'pointer'}} onClick={() => setFocused(p)}>
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:12}}>
+                <div style={{flex:1}}>
+                  <div className="date">{p.date}</div>
+                  <h3>{p.t}</h3>
+                  <p>{p.b}</p>
+                </div>
+                <div style={{color:'var(--purple-800)',fontSize:12,fontWeight:600,display:'inline-flex',alignItems:'center',gap:4,whiteSpace:'nowrap',marginTop:4}}>Ver <Icon name="arrow-right" size={12}/></div>
+              </div>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+
+      <Modal open={open} onClose={() => setOpen(false)} title="Nova publicação">
+        <Field label="Título"><input placeholder="Ex.: Novo POP publicado"/></Field>
+        <Field label="Resumo"><textarea placeholder="Frase curta para o feed"/></Field>
+        <Field label="Conteúdo completo"><textarea placeholder="Detalhes da novidade"/></Field>
+        <Field label="Anexos"><Dropzone /></Field>
+        <div className="modal-actions">
+          <button className="btn btn-ghost btn-sm" style={{background:'var(--surface-2)',color:'var(--ink)',border:'1px solid var(--line)'}} onClick={() => setOpen(false)}>Cancelar</button>
+          <button className="btn btn-solid btn-sm" onClick={() => setOpen(false)}>Publicar</button>
+        </div>
+      </Modal>
+
+      <div className="section" style={{marginTop:48}}>
+        <FreeContentBoard storageKey="pcm.novidades.free" title="Mural livre" subtitle="Publique qualquer coisa: PDF, vídeo, link, foto, dashboard PBI, deck, Word — tudo cabe aqui." />
+      </div>
+    </div>
+  );
+};
+
+const EquipePage = ({ onNav }) => {
+  const initial = [
+    { id:'t1', n:'Julio Scalisse',        r:'Diretor de Manutenção',                           b:'Governança da diretoria de manutenção.',           email:'julio.scalisse@multilixo.com.br',     photo:null },
+    { id:'t2', n:'Cristiano Guertes',     r:'Gerente de Manutenção',                           b:'Planejamento de frota (caminhões).',                email:'cristiano.guertes@multilixo.com.br',  photo:null },
+    { id:'t3', n:'Clayton Faneli',        r:'Manutenção · Governança / Máquinas Pesadas',      b:'Governança da manutenção de máquinas pesadas.',    email:'clayton.faneli@multilixo.com.br',     photo:null },
+    { id:'t4', n:'Gabriel Sousa Santos',  r:'Manutenção · Digitalização / PCM',                b:'Digitalização e PCM da diretoria de manutenção.',  email:'gabriel.sousa@multilixo.com.br',      photo:null },
+    { id:'t5', n:'Camila Cicone',         r:'PCM · Gestão Orçamentária',                       b:'Gestão orçamentária do PCM.',                       email:'camila.cicone@multilixo.com.br',      photo:null },
+    { id:'t6', n:'Thais Florentino',      r:'PCM · Mapa de Processos',                          b:'Mapeamento de processos do PCM.',                  email:'thais.florentino@multilixo.com.br',   photo:null },
+    { id:'t7', n:'Bruna Pereira',         r:'PCM · Capacitação Técnica',                        b:'Capacitação técnica da equipe de manutenção.',     email:'bruna.pereira@multilixo.com.br',      photo:null },
+  ];
+  const [team, setTeam] = useLocalAttachments('pcm.team.v2', initial);
+  const [open, setOpen] = useState(false);
+  const [nf, setNf] = useState({ n:'', r:'', b:'', email:'', photo:null });
+
+  const [editId, setEditId] = useState(null);
+  const [maproId, setMaproId] = useState(null);
+  const editing = editId ? team.find(p => p.id === editId) : null;
+  const maproPerson = maproId ? team.find(p => p.id === maproId) : null;
+  const updateField = (id, key, val) => setTeam(team.map(p => p.id===id ? {...p, [key]: val} : p));
+
+  const onPhoto = async (id, file) => {
+    if (!file) return;
+    const dataURL = await fileToDataURL(file);
+    setTeam(team.map(p => p.id===id ? {...p, photo: dataURL} : p));
+  };
+  const onNewPhoto = async (file) => {
+    if (!file) return;
+    const dataURL = await fileToDataURL(file);
+    setNf({...nf, photo: dataURL});
+  };
+  const addPerson = () => {
+    if (!nf.n) return;
+    setTeam([...team, {...nf, id: Date.now()+''}]);
+    setNf({ n:'', r:'', b:'', email:'', photo:null });
+    setOpen(false);
+  };
+  const remove = (id) => setTeam(team.filter(p=>p.id!==id));
+
+  return (
+    <div className="page">
+      <div className="page-header">
+        <div>
+          <div className="eyebrow">Quem faz acontecer</div>
+          <h1>Equipe PCM</h1>
+          <p className="lead">As pessoas por trás do planejamento, execução e melhoria contínua da manutenção.</p>
+        </div>
+        <button className="btn btn-primary" onClick={()=>setOpen(true)}><Icon name="plus" size={16}/> Adicionar pessoa</button>
+      </div>
+
+      <div className="grid grid-4">
+        {team.map((p,i) => (
+          <Reveal key={p.id} delay={i*50}>
+            <div className="card team-card hover">
+              <label className="ph" style={{background: p.photo ? '#000' : `linear-gradient(135deg, ${['var(--purple-800), var(--orange)','var(--orange), var(--lime)','var(--lime), var(--purple-800)','var(--purple-600), var(--orange)'][i%4]})`, cursor:'pointer'}}>
+                {p.photo ? <img src={p.photo} alt={p.n} style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:`center ${p.photoY||'top'}`,transform:`scale(${p.photoZoom||1})`,transformOrigin:`center ${p.photoY||'top'}`}}/> :
+                  <div className="initials">{p.n.split(' ').map(x=>x[0]).slice(0,2).join('')}</div>}
+                <input type="file" accept="image/*" style={{display:'none'}} onChange={e=>onPhoto(p.id, e.target.files[0])}/>
+                <div className="ph-edit">📷 {p.photo?'trocar':'adicionar foto'}</div>
+              </label>
+              <div className="info">
+                <h4>{p.n}</h4>
+                <div className="role">{p.r}</div>
+                <div className="bio">{p.b}</div>
+                {p.email && <a className="team-email" href={`mailto:${p.email}`}>{p.email}</a>}
+                <div className="team-actions">
+                  <button className="btn-team-mapro" onClick={()=>setMaproId(p.id)} title="MAPROs">
+                    <Icon name="file" size={13}/> MAPROs
+                  </button>
+                  <button className="btn-team-edit" onClick={()=>setEditId(p.id)} title="Editar">
+                    <Icon name="edit" size={13}/> Editar
+                  </button>
+                </div>
+              </div>
+              <button className="team-del" onClick={()=>remove(p.id)} title="Remover">×</button>
+            </div>
+          </Reveal>
+        ))}
+        <AddBlock label="Adicionar pessoa" sub="Nome, função, foto" onClick={()=>setOpen(true)} />
+      </div>
+
+      <div className="section" style={{marginTop:48}}>
+        <FreeContentBoard storageKey="pcm.equipe.free" title="Mural da equipe" subtitle="Adicione fotos do time, eventos, conquistas, links e qualquer coisa que importa." />
+      </div>
+
+      <Modal open={!!maproPerson} onClose={()=>setMaproId(null)} title={maproPerson ? `MAPROs — ${maproPerson.n}` : ''}
+        footer={<button className="btn btn-ghost btn-sm" style={{background:'var(--surface-2)',color:'var(--ink)',border:'1px solid var(--line)'}} onClick={()=>setMaproId(null)}>Fechar</button>}>
+        {maproPerson && <FreeContentBoard storageKey={`pcm.equipe.mapros.${maproPerson.id}`} title={`MAPROs de ${maproPerson.n}`} subtitle="Adicione os MAPROs sob responsabilidade desta pessoa — arquivos, links, imagens." />}
+      </Modal>
+
+      <Modal open={!!editing} onClose={()=>setEditId(null)} title={editing ? `Editar — ${editing.n}` : ''}
+        footer={<>
+          <button className="btn btn-ghost btn-sm" style={{background:'var(--surface-2)',color:'var(--ink)',border:'1px solid var(--line)'}} onClick={()=>setEditId(null)}>Fechar</button>
+        </>}>
+        {editing && <>
+          <Field label="Nome"><input value={editing.n} onChange={e=>updateField(editId,'n',e.target.value)}/></Field>
+          <Field label="Função / Área"><input value={editing.r} onChange={e=>updateField(editId,'r',e.target.value)}/></Field>
+          <Field label="Bio"><textarea rows={3} value={editing.b||''} onChange={e=>updateField(editId,'b',e.target.value)}/></Field>
+          <Field label="E-mail"><input type="email" value={editing.email||''} onChange={e=>updateField(editId,'email',e.target.value)}/></Field>
+          <Field label="Foto"><input type="file" accept="image/*" onChange={e=>onPhoto(editId, e.target.files[0])}/></Field>
+          <Field label="Posição vertical da foto">
+            <div style={{display:'flex',gap:8}}>
+              {['top','center','bottom'].map(pos => (
+                <button key={pos} type="button" className={`kind-btn${(editing.photoY||'top')===pos?' active':''}`} onClick={()=>updateField(editId,'photoY',pos)}>
+                  {pos==='top'?'Topo (rosto)':pos==='center'?'Centro':'Base'}
+                </button>
+              ))}
+            </div>
+          </Field>
+          <Field label={`Zoom da foto · ${(editing.photoZoom||1).toFixed(2)}×`}>
+            <input type="range" min="0.8" max="2" step="0.05" value={editing.photoZoom||1} onChange={e=>updateField(editId,'photoZoom',parseFloat(e.target.value))} style={{width:'100%'}}/>
+          </Field>
+          <div style={{marginTop:16,paddingTop:14,borderTop:'1px solid var(--line)'}}>
+            <button className="btn btn-ghost btn-sm" style={{color:'#c53030',border:'1px solid #fbd5d5',background:'#fff5f5'}} onClick={()=>{remove(editId);setEditId(null);}}>Remover pessoa</button>
+          </div>
+        </>}
+      </Modal>
+
+      <Modal open={open} onClose={()=>setOpen(false)} title="Adicionar pessoa"
+        footer={<>
+          <button className="btn btn-ghost btn-sm" style={{background:'var(--surface-2)',color:'var(--ink)',border:'1px solid var(--line)'}} onClick={()=>setOpen(false)}>Cancelar</button>
+          <button className="btn btn-solid btn-sm" onClick={addPerson}>Salvar</button>
+        </>}>
+        <Field label="Nome"><input value={nf.n} onChange={e=>setNf({...nf,n:e.target.value})}/></Field>
+        <Field label="Função"><input value={nf.r} onChange={e=>setNf({...nf,r:e.target.value})}/></Field>
+        <Field label="Bio curta"><textarea rows={2} value={nf.b} onChange={e=>setNf({...nf,b:e.target.value})}/></Field>
+        <Field label="E-mail"><input type="email" value={nf.email||''} onChange={e=>setNf({...nf,email:e.target.value})} placeholder="nome.sobrenome@multilixo.com.br"/></Field>
+        <Field label="Foto"><input type="file" accept="image/*" onChange={e=>onNewPhoto(e.target.files[0])}/></Field>
+        {nf.photo && <img src={nf.photo} style={{width:80,height:80,borderRadius:8,objectFit:'cover'}}/>}
+      </Modal>
+    </div>
+  );
+};
+
+Object.assign(window, { QuemSomosPage, ProjetosPage, IniciativasPage, NovidadesPage, EquipePage });
