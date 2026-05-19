@@ -183,6 +183,15 @@ const AttachmentEditor = ({ open, onClose, onSave, initial }) => {
     }
   }, [initial, open]);
   const reset = () => { setKind('link'); setTitle(''); setBody(''); setUrl(''); setEmbed(''); setSize('md'); setTextPos('below'); setFile(null); setExisting(null); };
+  const uploadIfPossible = async (dataURL, filename) => {
+    if (typeof window !== 'undefined' && typeof window.PCM_UPLOAD === 'function') {
+      try {
+        const url = await window.PCM_UPLOAD(dataURL, filename);
+        if (url && typeof url === 'string' && url.indexOf('http') === 0) return url;
+      } catch (e) { console.warn('upload helper falhou, mantendo base64', e); }
+    }
+    return dataURL;
+  };
   const save = async () => {
     const id = existing?.id || (Date.now() + '-' + Math.random().toString(36).slice(2,7));
     const base = { id, kind, title: title || 'Sem título', size, textPos, body, date: existing?.date || new Date().toLocaleDateString('pt-BR') };
@@ -190,11 +199,19 @@ const AttachmentEditor = ({ open, onClose, onSave, initial }) => {
     if (kind === 'link')  return finish({ ...base, url });
     if (kind === 'embed') return finish({ ...base, embed });
     if (kind === 'image') {
-      if (file) { const dataURL = await fileToDataURL(file); return finish({ ...base, dataURL, fileName: file.name }); }
+      if (file) {
+        const dataURL = await fileToDataURL(file);
+        const stored = await uploadIfPossible(dataURL, file.name);
+        return finish({ ...base, dataURL: stored, fileName: file.name });
+      }
       if (existing) return finish({ ...base, dataURL: existing.dataURL, fileName: existing.fileName });
     }
     if (kind === 'file') {
-      if (file) { const dataURL = await fileToDataURL(file); return finish({ ...base, dataURL, fileName: file.name, fileSize: file.size, fileType: file.type }); }
+      if (file) {
+        const dataURL = await fileToDataURL(file);
+        const stored = await uploadIfPossible(dataURL, file.name);
+        return finish({ ...base, dataURL: stored, fileName: file.name, fileSize: file.size, fileType: file.type });
+      }
       if (existing) return finish({ ...base, dataURL: existing.dataURL, fileName: existing.fileName, fileSize: existing.fileSize, fileType: existing.fileType });
     }
   };
