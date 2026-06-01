@@ -394,15 +394,23 @@ const NovidadesPage = () => {
 
 const EquipePage = ({ onNav }) => {
   const initial = [
-    { id:'t1', n:'Julio Scalisse',        r:'Diretor de Manutenção',                           b:'Governança da diretoria de manutenção.',           email:'julio.scalisse@multilixo.com.br',     photo:null },
-    { id:'t2', n:'Cristiano Guertes',     r:'Gerente de Manutenção',                           b:'Planejamento de frota (caminhões).',                email:'cristiano.guertes@multilixo.com.br',  photo:null },
-    { id:'t3', n:'Clayton Faneli',        r:'Manutenção · Governança / Máquinas Pesadas',      b:'Governança da manutenção de máquinas pesadas.',    email:'clayton.faneli@multilixo.com.br',     photo:null },
-    { id:'t4', n:'Gabriel Sousa Santos',  r:'Manutenção · Digitalização / PCM',                b:'Digitalização e PCM da diretoria de manutenção.',  email:'gabriel.sousa@multilixo.com.br',      photo:null },
-    { id:'t5', n:'Camila Cicone',         r:'PCM · Gestão Orçamentária',                       b:'Gestão orçamentária do PCM.',                       email:'camila.cicone@multilixo.com.br',      photo:null },
-    { id:'t6', n:'Thais Florentino',      r:'PCM · Mapa de Processos',                          b:'Mapeamento de processos do PCM.',                  email:'thais.florentino@multilixo.com.br',   photo:null },
-    { id:'t7', n:'Bruna Pereira',         r:'PCM · Capacitação Técnica',                        b:'Capacitação técnica da equipe de manutenção.',     email:'bruna.pereira@multilixo.com.br',      photo:null },
+    { id:'t1',  n:'Julio Scalisse',        r:'Diretor de Manutenção',                      b:'Governança da diretoria de manutenção.',                                                                                          email:'julio.scalisse@multilixo.com.br',    photo:null },
+    { id:'t2',  n:'Cristiano Guertes',      r:'Gerente de Manutenção',                      b:'Planejamento de frota (caminhões).',                                                                                              email:'cristiano.guertes@multilixo.com.br', photo:null },
+    { id:'t3',  n:'Clayton Faneli',         r:'Gestão Estratégica · Máquinas',              b:'Gestão estratégica da manutenção de máquinas: equipes, custos, programação de serviços, indicadores e suporte técnico às operações.', email:'clayton.faneli@multilixo.com.br',    photo:null },
+    { id:'t4',  n:'Gabriel Sousa Santos',   r:'PCM · Digitalização / Processos',            b:'Digitalização, BI e PCM da diretoria de manutenção.',                                                                             email:'gabriel.santos@multilixo.com.br',    photo:null },
+    { id:'t5',  n:'Camila Cicone',          r:'PCM · Controle de Custos',                   b:'Controle de custos da manutenção, orçamento, análises financeiras, acompanhamento de despesas e elaboração de TCO.',                email:'camila.cicone@multilixo.com.br',     photo:null },
+    { id:'t6',  n:'Thais Florentino',       r:'PCM · Governança Administrativa',            b:'Governança administrativa da manutenção, padronização de processos, análises de consumo e relatórios gerenciais.',                 email:'thais.florentino@multilixo.com.br',  photo:null },
+    { id:'t7',  n:'Bruna Pereira',          r:'PCM · RH da Manutenção',                     b:'Gestão administrativa de RH da manutenção: ponto, férias, atestados, bonificações e treinamentos.',                                email:'bruna.pereira@multilixo.com.br',     photo:null },
+    { id:'t8',  n:'Ricardo Tavares',        r:'PCM · Sinistros / Suporte RH',               b:'Controle de opacidade, gestão de sinistros e suporte administrativo e de RH.',                                                     email:'ricardo.tavares@multilixo.com.br',   photo:null },
+    { id:'t9',  n:'Camila Silva',           r:'PCM · Combustível',                          b:'Gestão de combustível, abastecimentos, conciliações, controle de diesel e suporte às filiais.',                                    email:'camila.silva@multilixo.com.br',      photo:null },
+    { id:'t10', n:'Arnaldo Dantas',         r:'PCM · Auditoria / Ativos',                   b:'Auditoria da manutenção, controle de revisões, preventivas, notas fiscais e gestão de ativos.',                                    email:'arnaldo.dantas@multilixo.com.br',    photo:null },
+    { id:'t11', n:'Maicon Rodrigues',       r:'PCM · Pneus e Lubrificantes',                b:'Gestão de pneus, lubrificantes e apoio ao planejamento das manutenções preventivas.',                                             email:'maicon.rodrigues@multilixo.com.br',  photo:null },
+    { id:'t12', n:'Jonathan Rocha',         r:'Máquinas · Controle Operacional',            b:'Controle operacional da manutenção de máquinas: preventivas, telemetria, consumo de combustível, máquinas paradas, ordens de serviço e notas fiscais.', email:'jonathan.rocha@multilixo.com.br',  photo:null },
+    { id:'t13', n:'Victor Silva',           r:'Máquinas · Materiais e Peças',               b:'Gestão de materiais, peças e serviços da manutenção de máquinas, acompanhando compras, fornecedores e reparos.',                   email:'',                                   photo:null },
+    { id:'t14', n:'Lucas Dias',             r:'Venda de Máquinas e Caminhões',              b:'Responsável pela venda de máquinas e caminhões.',                                                                                 email:'lucas.dias@multilixo.com.br',        photo:null },
+    { id:'t15', n:'Rodrigo Silva',          r:'Recepção Ativa / Triagem',                   b:'Responsável pela recepção ativa de caminhões e pela triagem de equipe.',                                                          email:'rodrigo.silva@multilixo.com.br',     photo:null },
   ];
-  const [team, setTeam] = useLocalAttachments('pcm.team.v2', initial);
+  const [team, setTeam] = useLocalAttachments('pcm.team.v3', initial);
   const [open, setOpen] = useState(false);
   const [nf, setNf] = useState({ n:'', r:'', b:'', email:'', photo:null });
 
