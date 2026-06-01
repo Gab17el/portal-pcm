@@ -351,17 +351,18 @@ const POPsPage = () => {
 
 const MAPROsPage = () => {
   const [items, setItems] = useState([
-  { ft: 'PDF', t: 'MAPRO-01 · Manutenção Preventiva', s: 'Fluxo completo do agendamento à validação.', b: 'Preventiva', date: '10/03/2026', size: '1.8 MB' },
-  { ft: 'PDF', t: 'MAPRO-02 · Chamado Corretivo', s: 'Acionamento até fechamento da OS.', b: 'Corretiva', date: '06/03/2026', size: '1.4 MB' },
-  { ft: 'PDF', t: 'MAPRO-03 · Recebimento de Peças', s: 'Entrada de materiais e conferência.', b: 'Estoque', date: '28/02/2026', size: '960 KB' },
-  { ft: 'IMG', t: 'MAPRO-04 · Inspeção Diária', s: 'Checklist do motorista antes da saída.', b: 'Inspeção', date: '20/02/2026', size: '2.1 MB' },
-  { ft: 'PDF', t: 'MAPRO-05 · Borracharia', s: 'Troca, rodízio e descarte de pneus.', b: 'Pneus', date: '12/02/2026', size: '1.2 MB' },
-  { ft: 'PDF', t: 'MAPRO-06 · Lubrificação', s: 'Padrão de lubrificação preventiva.', b: 'Preventiva', date: '05/02/2026', size: '820 KB' }]
+  { ft: 'XLS', t: 'Gestão Orçamentária', s: 'Matriz de projeto — gestão orçamentária da manutenção.', b: 'Gestão', date: '15/04/2026', size: '664 KB', url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQBxHlXYzTcPTLukXCa-a5VpAd9xZ5dGVSt9dwpIKTmSW48?e=OtAFIY' },
+  { ft: 'XLS', t: 'Mapa de Processo', s: 'Mapa de processo da manutenção.', b: 'Processo', date: '27/05/2026', size: '759 KB', url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQDEFcwk8dcOQphAb3UDOqneAdcgz_wCktElymyNFnqsHKU?e=OW5nea' },
+  { ft: 'XLS', t: 'Capacitação Técnica', s: 'Matriz de projeto — capacitação técnica da equipe.', b: 'Matriz de Projeto', date: '26/05/2026', size: '612 KB', url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQChkJm_eYgARbsGq3Mm4OMKAXWC7Q-8rRZFXc_qasCoeIg?e=dADvcV' },
+  { ft: 'XLS', t: 'Planejamento de Frota — Caminhões e Máquinas', s: 'Matriz de projeto — planejamento de manutenção da frota.', b: 'Matriz de Projeto', date: '13/05/2026', size: '2.2 MB', url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQC1gMLyU_fNTY7eSx9_rEloAfhu69H14sjov-sO33lJzGk?e=YvLQav' },
+  { ft: 'XLS', t: 'Governança da Manutenção', s: 'Matriz de projeto — governança da manutenção Multilixo.', b: 'Matriz de Projeto', date: '26/05/2026', size: '730 KB', url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQCjQyMvTrqzSpUZCc395puzAd9VtXZodzlHNZYTdk5GuTI?e=Vn1x3d' },
+  { ft: 'XLS', t: 'Máquinas Leves e Pesadas', s: 'Matriz de projeto — governança de máquinas leves e pesadas.', b: 'Matriz de Projeto', date: '23/04/2026', size: '603 KB', url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQAmPWA1TfRySo2SQDNj6jLGAedXHhwkKKmdDUnWW4UU7C0?e=7SdvTo' },
+  { ft: 'XLS', t: 'Digitalização da Manutenção', s: 'Mapa de processo da digitalização da manutenção.', b: 'Digitalização', date: '08/05/2026', size: '474 KB', url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQCFjAfCUjBSSplk9JTfuXAVARVCjCK-PmqLn4Utt3sVUT4?e=iWCp2I' }]
   );
   const [search, setSearch] = useState('');
   const [cat, setCat] = useState('Todas');
   const [open, setOpen] = useState(false);
-  const cats = ['Todas', 'Preventiva', 'Corretiva', 'Estoque', 'Inspeção', 'Pneus'];
+  const cats = ['Todas', 'Gestão', 'Processo', 'Matriz de Projeto', 'Digitalização'];
   const filtered = items.filter((p) => (cat === 'Todas' || p.b === cat) && p.t.toLowerCase().includes(search.toLowerCase()));
 
   return (
@@ -369,8 +370,8 @@ const MAPROsPage = () => {
       <div className="page-header">
         <div>
           <div className="eyebrow">Mapas de processo</div>
-          <h1>MAPROs & Fluxogramas</h1>
-          <p className="lead">Visualização dos processos da manutenção — baixe, abra e contribua com novos.</p>
+          <h1>MAPROS · Matriz de Projeto</h1>
+          <p className="lead">Matrizes de projeto e mapas de processo da manutenção — abra e contribua com novos.</p>
         </div>
         <button className="btn btn-primary" onClick={() => setOpen(true)}><Icon name="plus" size={16} /> Novo MAPRO</button>
       </div>
@@ -382,7 +383,7 @@ const MAPROsPage = () => {
       <div className="grid grid-2">
         {filtered.map((p, i) =>
         <Reveal key={i} delay={i * 40}>
-            <div className="card pop-card hover">
+            <div className="card pop-card hover" style={{ cursor: p.url ? 'pointer' : 'default' }} onClick={() => p.url && window.open(p.url, '_blank', 'noopener')}>
               <div className="ft-ico">{p.ft}</div>
               <div className="body">
                 <div className="title">{p.t}</div>
@@ -393,7 +394,7 @@ const MAPROsPage = () => {
                 </div>
                 <div style={{ fontSize: 12, color: 'var(--ink-3)', marginTop: 4 }}>{p.s}</div>
               </div>
-              <div className="dl"><Icon name="download" size={14} /> Baixar</div>
+              <div className="dl"><Icon name="link" size={14} /> Abrir</div>
             </div>
           </Reveal>
         )}
@@ -433,6 +434,7 @@ const IndicadoresPage = () => {
   { t: 'Custo por Veículos', d: 'Custo de manutenção por veículo, modelo e fabricante.', ico: 'truck', tone: 'o', url: 'https://app.powerbi.com/groups/3ddeded8-81f5-420c-911d-00b515315786/reports/c8769fa2-8670-42ea-a629-90a630151db8/ace112990848200ac195?language=pt-BR&experience=power-bi' },
   { t: 'Abertura de O.S.', d: 'Volume, custo e aging das ordens de serviço por motivo.', ico: 'file', tone: 'l', url: 'https://app.powerbi.com/groups/3ddeded8-81f5-420c-911d-00b515315786/reports/c8769fa2-8670-42ea-a629-90a630151db8/4b1bf6d12a9cca9ee126?language=pt-BR&experience=power-bi' },
   { t: 'Mapa de Calor · Checklist', d: 'Distribuição do checklist por dia e horário — mapa de calor.', ico: 'dashboard', tone: 'p', url: 'https://app.powerbi.com/groups/3ddeded8-81f5-420c-911d-00b515315786/reports/b2c4e56d-8068-4653-a797-7ba180ca3b52/bc121af00d7c21501942?language=pt-BR&experience=power-bi' },
+  { t: 'Mapa dos Processos 2026', d: 'Mapa consolidado dos processos da manutenção — 2026.', ico: 'flow', tone: 'o', url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQB_h1tlizJ0R4JHdSzuWKbOAfokGpt6qNbZGjqCc0AFx34?e=zlAY0F' },
   { t: 'CPK · Custo por KM', d: 'Custo de manutenção por quilômetro rodado.', ico: 'trend', tone: 'o', url: '#', dev: true },
   { t: 'QPK · Quebra por KM', d: 'Índice de quebras por quilômetro rodado.', ico: 'target', tone: 'l', url: '#', dev: true },
   { t: 'MTBF', d: 'Tempo médio entre falhas (Mean Time Between Failures).', ico: 'clock', tone: 'p', url: '#', dev: true },
@@ -445,9 +447,9 @@ const IndicadoresPage = () => {
     <div className="page">
       <div className="page-header">
         <div>
-          <div className="eyebrow">Dashboards & BI</div>
-          <h1>Indicadores</h1>
-          <p className="lead">Power BI embarcados e explicados — saiba o que cada dashboard mostra antes de abrir.</p>
+          <div className="eyebrow">Indicadores & Acompanhamento</div>
+          <h1>Indicadores & Acompanhamento</h1>
+          <p className="lead">Indicadores de manutenção, frota e custos — saiba o que cada painel mostra antes de abrir.</p>
         </div>
         <button className="btn btn-primary" onClick={() => setOpen(true)}><Icon name="plus" size={16} /> Novo dashboard</button>
       </div>
@@ -488,7 +490,7 @@ const IndicadoresPage = () => {
               </div>
               <div className="bi-desc">{d.d}</div>
               <div className="bi-preview">
-                <div className="mini-lbl">Power BI</div>
+                <div className="mini-lbl">Indicador</div>
                 <div className="mini-bars">
                   {[40, 72, 55, 88, 62, 91, 78, 95, 68].map((v, k) => <div key={k} className="bar" style={{ height: `${v}%` }}></div>)}
                 </div>
