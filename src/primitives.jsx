@@ -142,7 +142,22 @@ const useLocalAttachments = (key, initial = []) => {
   const [items, setItems] = useState(() => {
     try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : initial; } catch (e) { return initial; }
   });
-  useEffect(() => { try { localStorage.setItem(key, JSON.stringify(items)); } catch (e) {} }, [items, key]);
+  useEffect(() => {
+    try {
+      localStorage.setItem(key, JSON.stringify(items));
+    } catch (e) {
+      // localStorage cheio (provavelmente fotos base64): salva sem os base64
+      try {
+        const stripped = Array.isArray(items)
+          ? items.map(it => (it && typeof it.photo === 'string' && it.photo.startsWith('data:')) ? { ...it, photo: null } : it)
+          : items;
+        localStorage.setItem(key, JSON.stringify(stripped));
+        console.warn('[PCM] localStorage cheio: salvei sem fotos base64. Use o upload para o Drive.');
+      } catch (e2) {
+        console.error('[PCM] não foi possível salvar no localStorage', e2);
+      }
+    }
+  }, [items, key]);
   return [items, setItems];
 };
 
