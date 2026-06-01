@@ -422,12 +422,21 @@ const MAPROsPage = () => {
 
 const IndicadoresPage = () => {
   const [dashboards, setDashboards] = useState([
-  { t: 'Gestão Operacional · Telemetria', d: 'Análise de boas práticas ao volante — consumo, distância, classificação por classe e filial.', ico: 'truck', tone: 'p', url: 'https://app.powerbi.com/groups/3ddeded8-81f5-420c-911d-00b515315786/reports/c8769fa2-8670-42ea-a629-90a630151db8/4b1bf6d12a9cca9ee126?ctid=5822729f-9e44-4c26-a813-30ad6a1f1e21' },
-  { t: 'ATA · PCM', d: 'Atas e acompanhamento das reuniões diárias do PCM.', ico: 'calendar', tone: 'o', url: '#' },
-  { t: 'SGM · Follow-up Caminhões', d: 'Acompanhamento diário do status dos caminhões e indicadores de manutenção.', ico: 'truck', tone: 'l', url: '#' },
-  { t: 'SGM · Follow-up Máquinas', d: 'Disponibilidade, paradas e eficiência da frota de máquinas.', ico: 'wrench', tone: 'p', url: '#' },
-  { t: 'MAPRO · Digitalização', d: 'Evolução do processo de digitalização da manutenção.', ico: 'chart', tone: 'o', url: '#' },
-  { t: 'Manutenção 360', d: 'Visão consolidada 360° da manutenção: custos, SLA, backlog.', ico: 'target', tone: 'l', url: '#' }]
+  { t: 'MTR / VTR · Retidos', d: 'Máquinas retidas (MTR) e veículos retidos (VTR) — controle 2026.', ico: 'truck', tone: 'p', url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQCc_DWQQM7ESpcM52Y_tKdnAcuun5LgfdfR31lNj4M306M?e=368iyR' },
+  { t: 'ATA · PCM', d: 'Atas e acompanhamento das reuniões diárias do PCM.', ico: 'calendar', tone: 'o', url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQCn5XSV75nvSYFkNHz_UzbqARrvnBBNyl2lC8lBDcZx560?e=xE2NlH' },
+  { t: 'CRM · Fechamento do Mês', d: 'Fechamento mensal da manutenção — orçado x realizado.', ico: 'calendar', tone: 'o', url: 'https://app.powerbi.com/groups/3ddeded8-81f5-420c-911d-00b515315786/reports/9c9f93a3-dcec-44c0-b875-29d3bca039bb/f199eb34572138cda909?language=pt-BR&experience=power-bi' },
+  { t: 'Custo de Manutenção · Diário', d: 'Orçado x realizado diário do custo de manutenção da frota.', ico: 'chart', tone: 'l', url: 'https://app.powerbi.com/groups/3ddeded8-81f5-420c-911d-00b515315786/reports/c8769fa2-8670-42ea-a629-90a630151db8/f19987f87002e0329880?language=pt-BR&experience=power-bi' },
+  { t: 'Inventário de Frota', d: 'Composição da frota: cadastrada, patrimonial, locada e operacional.', ico: 'truck', tone: 'p', url: 'https://app.powerbi.com/groups/3ddeded8-81f5-420c-911d-00b515315786/reports/c8769fa2-8670-42ea-a629-90a630151db8/f199eb34572138cda909?language=pt-BR&experience=power-bi' },
+  { t: 'Frota Auxiliar', d: 'Acompanhamento da frota auxiliar de apoio às operações.', ico: 'truck', tone: 'o', url: 'https://app.powerbi.com/groups/3ddeded8-81f5-420c-911d-00b515315786/reports/e5c8062f-0249-461f-a1f9-d12b31c22c32/64718a8041c18d712186?language=pt-BR&experience=power-bi' },
+  { t: 'Saída de Peças', d: 'Custo das saídas de peças por empresa, filial e período.', ico: 'wrench', tone: 'l', url: 'https://app.powerbi.com/groups/3ddeded8-81f5-420c-911d-00b515315786/reports/c8769fa2-8670-42ea-a629-90a630151db8/059eb79ffdd89f891415?language=pt-BR&experience=power-bi' },
+  { t: 'Gestão de Pneus', d: 'Controle de pneus — vida útil, rodízio, custo e descarte.', ico: 'gear', tone: 'p', url: 'https://app.powerbi.com/groups/3ddeded8-81f5-420c-911d-00b515315786/reports/64fdd3cc-f87a-46b7-9ab6-9921546bd57b/059eb79ffdd89f891415?language=pt-BR&experience=power-bi' },
+  { t: 'Custo por Veículos', d: 'Custo de manutenção por veículo, modelo e fabricante.', ico: 'truck', tone: 'o', url: 'https://app.powerbi.com/groups/3ddeded8-81f5-420c-911d-00b515315786/reports/c8769fa2-8670-42ea-a629-90a630151db8/ace112990848200ac195?language=pt-BR&experience=power-bi' },
+  { t: 'Abertura de O.S.', d: 'Volume, custo e aging das ordens de serviço por motivo.', ico: 'file', tone: 'l', url: 'https://app.powerbi.com/groups/3ddeded8-81f5-420c-911d-00b515315786/reports/c8769fa2-8670-42ea-a629-90a630151db8/4b1bf6d12a9cca9ee126?language=pt-BR&experience=power-bi' },
+  { t: 'Mapa de Calor · Checklist', d: 'Distribuição do checklist por dia e horário — mapa de calor.', ico: 'dashboard', tone: 'p', url: 'https://app.powerbi.com/groups/3ddeded8-81f5-420c-911d-00b515315786/reports/b2c4e56d-8068-4653-a797-7ba180ca3b52/bc121af00d7c21501942?language=pt-BR&experience=power-bi' },
+  { t: 'CPK · Custo por KM', d: 'Custo de manutenção por quilômetro rodado.', ico: 'trend', tone: 'o', url: '#', dev: true },
+  { t: 'QPK · Quebra por KM', d: 'Índice de quebras por quilômetro rodado.', ico: 'target', tone: 'l', url: '#', dev: true },
+  { t: 'MTBF', d: 'Tempo médio entre falhas (Mean Time Between Failures).', ico: 'clock', tone: 'p', url: '#', dev: true },
+  { t: 'MTTR', d: 'Tempo médio de reparo (Mean Time To Repair).', ico: 'gear', tone: 'o', url: '#', dev: true }]
   );
   const [open, setOpen] = useState(false);
   const [focused, setFocused] = useState(null);
@@ -447,8 +456,21 @@ const IndicadoresPage = () => {
       <div className="section" style={{ marginTop: 0, marginBottom: 32 }}>
           <SectionHead eyebrow={focused.t} title="Dashboard em foco" right={<button className="btn btn-ghost btn-sm" style={{ background: 'var(--surface-2)', color: 'var(--ink)', border: '1px solid var(--line)' }} onClick={() => setFocused(null)}><Icon name="x" size={14} /> Fechar</button>} />
           <div className="iframe-wrap" style={{ height: 600 }}>
-            {focused.url && focused.url !== '#' ?
+            {focused.dev ?
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: 12, color: 'var(--ink-3)' }}>
+                <Icon name="gear" size={32} />
+                <div style={{ fontFamily: 'JetBrains Mono', fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Em desenvolvimento</div>
+                <div style={{ fontSize: 13, color: 'var(--ink-2)' }}>Este indicador está sendo construído e em breve estará disponível.</div>
+              </div> :
+          focused.url && focused.url !== '#' ?
+          focused.url.includes('powerbi.com') ?
           <iframe src={focused.url} style={{ width: '100%', height: '100%', border: 0 }} allowFullScreen></iframe> :
+
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: 16 }}>
+                <div style={{ color: 'var(--ink-3)', fontFamily: 'JetBrains Mono', fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Este recurso abre em nova aba</div>
+                <a className="btn btn-primary" href={focused.url} target="_blank" rel="noopener noreferrer"><Icon name="arrow-right" size={16} /> Abrir {focused.t}</a>
+              </div> :
+
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--ink-3)', fontFamily: 'JetBrains Mono', fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Conecte um link Power BI neste dashboard</div>
           }
@@ -467,13 +489,12 @@ const IndicadoresPage = () => {
               <div className="bi-desc">{d.d}</div>
               <div className="bi-preview">
                 <div className="mini-lbl">Power BI</div>
-                <div className="mini-val">{['97,2%', '', '', '', '', ''][i % 6]}</div>
                 <div className="mini-bars">
                   {[40, 72, 55, 88, 62, 91, 78, 95, 68].map((v, k) => <div key={k} className="bar" style={{ height: `${v}%` }}></div>)}
                 </div>
               </div>
               <div className="bi-foot">
-                <span>{d.url && d.url !== '#' ? 'Conectado' : 'Placeholder'}</span>
+                <span>{d.dev ? 'Em desenvolvimento' : d.url && d.url !== '#' ? 'Conectado' : 'Placeholder'}</span>
                 <span className="open">Abrir <Icon name="arrow-right" size={12} /></span>
               </div>
             </div>
