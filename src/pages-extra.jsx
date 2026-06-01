@@ -420,15 +420,36 @@ const EquipePage = ({ onNav }) => {
   const maproPerson = maproId ? team.find(p => p.id === maproId) : null;
   const updateField = (id, key, val) => setTeam(team.map(p => p.id===id ? {...p, [key]: val} : p));
 
+  const [uploading, setUploading] = useState(null);
   const onPhoto = async (id, file) => {
     if (!file) return;
-    const dataURL = await fileToDataURL(file);
-    setTeam(team.map(p => p.id===id ? {...p, photo: dataURL} : p));
+    if (file.size > 8*1024*1024) { alert('Imagem muito grande (máx. 8 MB). Tente uma menor.'); return; }
+    setUploading(id);
+    try {
+      const dataURL = await fileToDataURL(file);
+      let photo = dataURL;
+      if (window.PCM_UPLOAD) {
+        try {
+          const url = await window.PCM_UPLOAD(dataURL, 'foto-' + id + '-' + Date.now() + '.jpg');
+          if (url && /^https?:\/\//.test(url)) photo = url;
+        } catch (e) { console.warn('[PCM] upload de foto falhou, usando base64', e); }
+      }
+      setTeam(prev => prev.map(p => p.id===id ? {...p, photo} : p));
+    } finally {
+      setUploading(null);
+    }
   };
   const onNewPhoto = async (file) => {
     if (!file) return;
     const dataURL = await fileToDataURL(file);
-    setNf({...nf, photo: dataURL});
+    let photo = dataURL;
+    if (window.PCM_UPLOAD) {
+      try {
+        const url = await window.PCM_UPLOAD(dataURL, 'foto-novo-' + Date.now() + '.jpg');
+        if (url && /^https?:\/\//.test(url)) photo = url;
+      } catch (e) { console.warn('[PCM] upload de foto falhou, usando base64', e); }
+    }
+    setNf({...nf, photo});
   };
   const addPerson = () => {
     if (!nf.n) return;
@@ -452,19 +473,20 @@ const EquipePage = ({ onNav }) => {
       <div className="grid grid-4">
         {team.map((p,i) => (
           <Reveal key={p.id} delay={i*50}>
-            <div className="card team-card hover">
-              <label className="ph" style={{background: p.photo ? '#000' : `linear-gradient(135deg, ${['var(--purple-800), var(--orange)','var(--orange), var(--lime)','var(--lime), var(--purple-800)','var(--purple-600), var(--orange)'][i%4]})`, cursor:'pointer'}}>
+            <div className="card team-card hover" style={{height:'100%',display:'flex',flexDirection:'column'}}>
+              <label className="ph" style={{flexShrink:0, background: p.photo ? '#000' : `linear-gradient(135deg, ${['var(--purple-800), var(--orange)','var(--orange), var(--lime)','var(--lime), var(--purple-800)','var(--purple-600), var(--orange)'][i%4]})`, cursor:'pointer'}}>
                 {p.photo ? <img src={p.photo} alt={p.n} style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:`center ${p.photoY||'top'}`,transform:`scale(${p.photoZoom||1})`,transformOrigin:`center ${p.photoY||'top'}`}}/> :
                   <div className="initials">{p.n.split(' ').map(x=>x[0]).slice(0,2).join('')}</div>}
                 <input type="file" accept="image/*" style={{display:'none'}} onChange={e=>onPhoto(p.id, e.target.files[0])}/>
                 <div className="ph-edit">📷 {p.photo?'trocar':'adicionar foto'}</div>
+                {uploading===p.id && <div style={{position:'absolute',inset:0,background:'rgba(0,0,0,.55)',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:13,fontFamily:'JetBrains Mono'}}>Enviando…</div>}
               </label>
-              <div className="info">
+              <div className="info" style={{flex:1,display:'flex',flexDirection:'column'}}>
                 <h4>{p.n}</h4>
                 <div className="role">{p.r}</div>
-                <div className="bio">{p.b}</div>
+                <div className="bio" title={p.b} style={{display:'-webkit-box',WebkitLineClamp:4,WebkitBoxOrient:'vertical',overflow:'hidden'}}>{p.b}</div>
                 {p.email && <a className="team-email" href={`mailto:${p.email}`}>{p.email}</a>}
-                <div className="team-actions">
+                <div className="team-actions" style={{marginTop:'auto'}}>
                   <button className="btn-team-mapro" onClick={()=>setMaproId(p.id)} title="MAPROs">
                     <Icon name="file" size={13}/> MAPROs
                   </button>
