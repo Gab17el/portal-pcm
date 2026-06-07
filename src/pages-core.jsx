@@ -426,6 +426,11 @@ const IndicadoresPage = () => {
   { t: 'MTR / VTR · Retidos', d: 'Máquinas retidas (MTR) e veículos retidos (VTR) — controle 2026.', ico: 'truck', tone: 'p', url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQCc_DWQQM7ESpcM52Y_tKdnAcuun5LgfdfR31lNj4M306M?e=368iyR' },
   { t: 'ATA · PCM', d: 'Atas e acompanhamento das reuniões diárias do PCM.', ico: 'calendar', tone: 'o', url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQCn5XSV75nvSYFkNHz_UzbqARrvnBBNyl2lC8lBDcZx560?e=xE2NlH' },
   { t: 'Mapa dos Processos 2026', d: 'Mapa consolidado dos processos da manutenção — 2026.', ico: 'flow', tone: 'l', url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQBczakhDhqTSLs681X0gs54AR-sJJKqJk92R9FnSoGo0jU?e=eifOqT' },
+  { t: 'SGM · Daily Follow-up', d: 'Follow-up diário SGM — caminhões, máquinas, diesel e DTP. Clique para escolher.', ico: 'clock', tone: 'p', children: [
+    { t: 'Daily · Follow-up Caminhões', url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQC6mt9VSm6ARZ5z0YPvgJRnAaZx4dG_uAA_xiL2yv3NRUI?e=ISl33P' },
+    { t: 'Daily · Follow-up Máquinas', url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQD9n00G93wDS5Z1D7_-Hz-NAcXkjcXoFUT0Pc4NAeCeW3A?e=DXqtAP' },
+    { t: 'Daily · Follow-up Diesel', url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQBaub6sxty-RrHgW0rGfT9YAfOizfOCGiew9z19SEhPW60?e=U8hXLP' },
+    { t: 'Daily · Follow-up DTP', url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQAIhC2aHeveQayubMT_jkuUATXXYCCTnd2Z_8A-A7wGYWE?e=AJc7W1' }] },
   { t: 'CRM · Fechamento do Mês', d: 'Fechamento mensal da manutenção — orçado x realizado.', ico: 'calendar', tone: 'o', url: 'https://app.powerbi.com/groups/3ddeded8-81f5-420c-911d-00b515315786/reports/9c9f93a3-dcec-44c0-b875-29d3bca039bb/f199eb34572138cda909?language=pt-BR&experience=power-bi' },
   { t: 'Custo de Manutenção · Diário', d: 'Orçado x realizado diário do custo de manutenção da frota.', ico: 'chart', tone: 'l', url: 'https://app.powerbi.com/groups/3ddeded8-81f5-420c-911d-00b515315786/reports/c8769fa2-8670-42ea-a629-90a630151db8/f19987f87002e0329880?language=pt-BR&experience=power-bi' },
   { t: 'Inventário de Frota', d: 'Composição da frota: cadastrada, patrimonial, locada e operacional.', ico: 'truck', tone: 'p', url: 'https://app.powerbi.com/groups/3ddeded8-81f5-420c-911d-00b515315786/reports/c8769fa2-8670-42ea-a629-90a630151db8/f199eb34572138cda909?language=pt-BR&experience=power-bi' },
@@ -435,13 +440,25 @@ const IndicadoresPage = () => {
   { t: 'Custo por Veículos', d: 'Custo de manutenção por veículo, modelo e fabricante.', ico: 'truck', tone: 'o', url: 'https://app.powerbi.com/groups/3ddeded8-81f5-420c-911d-00b515315786/reports/c8769fa2-8670-42ea-a629-90a630151db8/ace112990848200ac195?language=pt-BR&experience=power-bi' },
   { t: 'Abertura de O.S.', d: 'Volume, custo e aging das ordens de serviço por motivo.', ico: 'file', tone: 'l', url: 'https://app.powerbi.com/groups/3ddeded8-81f5-420c-911d-00b515315786/reports/c8769fa2-8670-42ea-a629-90a630151db8/4b1bf6d12a9cca9ee126?language=pt-BR&experience=power-bi' },
   { t: 'Mapa de Calor · Checklist', d: 'Distribuição do checklist por dia e horário — mapa de calor.', ico: 'dashboard', tone: 'p', url: 'https://app.powerbi.com/groups/3ddeded8-81f5-420c-911d-00b515315786/reports/b2c4e56d-8068-4653-a797-7ba180ca3b52/bc121af00d7c21501942?language=pt-BR&experience=power-bi' },
+  { t: 'Solicitação de Apoio e Orçamento · Máquinas', d: 'Formulário para solicitar apoio e orçamento para máquinas.', ico: 'file', tone: 'o', url: 'https://script.google.com/macros/s/AKfycbyz44HPLiksX5w9YDNLR_Rsgu02YrBlMnFwhH_gJWpZRokWDd1rGy-50LTZ1RMoDiC4/exec' },
+  { t: 'SLA · Manutenção Preventiva de Máquinas', d: 'Acompanhamento do SLA da manutenção preventiva de máquinas.', ico: 'target', tone: 'l', url: 'https://jhroochamulti.github.io/manutencao-preventiva-multilixo/index.html?v=54' },
   { t: 'CPK · Custo por KM', d: 'Custo de manutenção por quilômetro rodado.', ico: 'trend', tone: 'o', url: '#', dev: true },
   { t: 'QPK · Quebra por KM', d: 'Índice de quebras por quilômetro rodado.', ico: 'target', tone: 'l', url: '#', dev: true },
   { t: 'MTBF', d: 'Tempo médio entre falhas (Mean Time Between Failures).', ico: 'clock', tone: 'p', url: '#', dev: true },
   { t: 'MTTR', d: 'Tempo médio de reparo (Mean Time To Repair).', ico: 'gear', tone: 'o', url: '#', dev: true }]
   );
   const [open, setOpen] = useState(false);
-  const [focused, setFocused] = useState(null);
+  const [chooser, setChooser] = useState(null);
+  const [query, setQuery] = useState('');
+
+  const openDash = (d) => {
+    if (d.dev) return;
+    if (d.children) { setChooser(d); return; }
+    if (d.url && d.url !== '#') window.open(d.url, '_blank', 'noopener');
+  };
+
+  const q = query.trim().toLowerCase();
+  const shown = dashboards.filter(d => !q || (d.t + ' ' + d.d).toLowerCase().includes(q) || (d.children || []).some(c => c.t.toLowerCase().includes(q)));
 
   return (
     <div className="page">
@@ -454,33 +471,15 @@ const IndicadoresPage = () => {
         <button className="btn btn-primary" onClick={() => setOpen(true)}><Icon name="plus" size={16} /> Novo dashboard</button>
       </div>
 
-      {focused &&
-      <div className="section" style={{ marginTop: 0, marginBottom: 32 }}>
-          <SectionHead eyebrow={focused.t} title="Dashboard em foco" right={<button className="btn btn-ghost btn-sm" style={{ background: 'var(--surface-2)', color: 'var(--ink)', border: '1px solid var(--line)' }} onClick={() => setFocused(null)}><Icon name="x" size={14} /> Fechar</button>} />
-          <div className="iframe-wrap" style={{ height: 600 }}>
-            {focused.dev ?
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: 12, color: 'var(--ink-3)' }}>
-                <Icon name="gear" size={32} />
-                <div style={{ fontFamily: 'JetBrains Mono', fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Em desenvolvimento</div>
-                <div style={{ fontSize: 13, color: 'var(--ink-2)' }}>Este indicador está sendo construído e em breve estará disponível.</div>
-              </div> :
-          focused.url && focused.url !== '#' ?
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: 16 }}>
-                <div style={{ color: 'var(--ink-3)', fontFamily: 'JetBrains Mono', fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{focused.url.includes('powerbi.com') ? 'Power BI · abre em nova aba' : 'Planilha · abre em nova aba'}</div>
-                <a className="btn btn-primary" href={focused.url} target="_blank" rel="noopener noreferrer"><Icon name="arrow-right" size={16} /> Abrir {focused.t}</a>
-                <div style={{ fontSize: 12, color: 'var(--ink-3)', maxWidth: 360, textAlign: 'center' }}>Requer login na conta Multilixo. Os relatórios do Power BI não podem ser embarcados por política do ambiente.</div>
-              </div> :
-
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--ink-3)', fontFamily: 'JetBrains Mono', fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Conecte um link a este indicador</div>
-          }
-          </div>
-        </div>
-      }
+      <div className="search" style={{ maxWidth: 420, marginBottom: 24 }}>
+        <span className="s-ico"><Icon name="search" size={16} /></span>
+        <input placeholder="Buscar indicador..." value={query} onChange={e => setQuery(e.target.value)} />
+      </div>
 
       <div className="grid grid-3">
-        {dashboards.map((d, i) =>
-        <Reveal key={i} delay={i * 50}>
-            <div className={`card bi-card hover ${d.tone}`} onClick={() => setFocused(d)}>
+        {shown.map((d, i) =>
+        <Reveal key={d.t} delay={i * 40}>
+            <div className={`card bi-card hover ${d.tone}`} style={{ cursor: d.dev ? 'default' : 'pointer' }} onClick={() => openDash(d)}>
               <div className="bi-head">
                 <div className="ico"><Icon name={d.ico} size={20} /></div>
                 <div><h3>{d.t}</h3></div>
@@ -493,14 +492,25 @@ const IndicadoresPage = () => {
                 </div>
               </div>
               <div className="bi-foot">
-                <span>{d.dev ? 'Em desenvolvimento' : d.url && d.url !== '#' ? 'Conectado' : 'Placeholder'}</span>
-                <span className="open">Abrir <Icon name="arrow-right" size={12} /></span>
+                <span>{d.dev ? 'Em desenvolvimento' : d.children ? `${d.children.length} planilhas` : d.url && d.url !== '#' ? 'Conectado' : 'Placeholder'}</span>
+                <span className="open">{d.dev ? '—' : d.children ? 'Escolher' : 'Abrir'} {!d.dev && <Icon name="arrow-right" size={12} />}</span>
               </div>
             </div>
           </Reveal>
         )}
-        <AddBlock label="Adicionar dashboard" sub="Cole um link do Power BI" onClick={() => setOpen(true)} />
+        {shown.length === 0 &&
+        <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px 0', color: 'var(--ink-3)', fontFamily: 'JetBrains Mono', fontSize: 13 }}>Nenhum indicador encontrado para "{query}".</div>}
+        {!q && <AddBlock label="Adicionar dashboard" sub="Cole um link do Power BI" onClick={() => setOpen(true)} />}
       </div>
+
+      <Modal open={!!chooser} onClose={() => setChooser(null)} title={chooser ? chooser.t : ''} desc="Escolha qual planilha abrir (abre em nova aba).">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {chooser && chooser.children.map((c, k) =>
+          <a key={k} className="btn btn-solid" style={{ justifyContent: 'space-between', textAlign: 'left' }} href={c.url} target="_blank" rel="noopener noreferrer" onClick={() => setChooser(null)}>
+              {c.t} <Icon name="arrow-right" size={16} />
+            </a>)}
+        </div>
+      </Modal>
 
       <Modal open={open} onClose={() => setOpen(false)} title="Novo dashboard" desc="Cole a URL pública do Power BI.">
         <Field label="Título"><input placeholder="Ex.: Disponibilidade de frota" /></Field>
