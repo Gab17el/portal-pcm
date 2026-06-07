@@ -332,17 +332,48 @@ const IniciativasPage = () => {
   );
 };
 
+const NOV_MESES = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+const novHoje = () => { const d = new Date(); return `${String(d.getDate()).padStart(2,'0')} ${NOV_MESES[d.getMonth()]} · ${d.getFullYear()}`; };
+
 const NovidadesPage = () => {
   const [focused, setFocused] = useState(null);
   const [open, setOpen] = useState(false);
-  const posts = [
-    { date:'22 ABR · 2026', t:'Digitalização dos MAPROs 100% concluída', b:'Todos os mapas de processo da manutenção agora estão disponíveis no portal, com busca, categorias e versionamento.', full:'Após 4 meses de trabalho, finalizamos a digitalização completa dos MAPROs. São +30 fluxos de processo agora disponíveis na biblioteca digital, com busca por nome e categoria, versionamento e download direto. As pastas físicas serão mantidas como backup pelos próximos 6 meses.', tone:'o' },
-    { date:'18 ABR · 2026', t:'Novo dashboard de telemetria ativo', b:'Gestão de boas práticas ao volante integrada ao Power BI — 130 caminhões já reportando em tempo real.', full:'O novo dashboard de telemetria já está no ar. Ele permite acompanhar consumo, frenagem brusca, aceleração brusca e tempo ocioso por caminhão, classe e filial. Inicialmente com 130 caminhões — meta é cobrir toda a frota até o fim do ano.', tone:'p' },
-    { date:'10 ABR · 2026', t:'Iniciativa: SGM Follow-up diário', b:'Rotina de acompanhamento diário de caminhões e máquinas oficialmente implantada em todas as filiais.', full:'A rotina de follow-up diário do SGM agora é oficial e roda em todas as filiais. 30 minutos pela manhã, com toda a equipe operacional, revisando status, prioridades e plano do dia.', tone:'l' },
-    { date:'28 MAR · 2026', t:'Reunião de Manutenção 360', b:'Apresentação da visão consolidada da manutenção para toda a liderança operacional.', full:'Realizamos a reunião trimestral Manutenção 360, apresentando à liderança operacional os principais indicadores: disponibilidade, MTTR, custo unitário e backlog. Resultados acima da meta em 4 dos 5 indicadores principais.', tone:'o' },
-    { date:'15 MAR · 2026', t:'Padronização de POPs iniciada', b:'Revisão de todos os procedimentos operacionais da manutenção começou esta semana.', full:'Iniciamos o projeto de padronização dos POPs. Todos serão revisados, atualizados, terão capa padrão e fluxograma. Meta: concluir 100% até julho/2026.', tone:'p' },
-    { date:'02 MAR · 2026', t:'Apresentação Manutenção 360 · 02.03', b:'Deck executivo com os principais indicadores do PCM e projeções para o próximo trimestre.', full:'Deck executivo Manutenção 360 — versão 02.03.2026. Apresentado aos diretores e gerentes regionais. Próxima edição em junho.', tone:'l' },
+  const [np, setNp] = useState({ t:'', b:'', full:'' });
+  const [editMode, setEditMode] = useState(() => document.body.dataset.editMode === '1');
+  useEffect(() => {
+    const sync = () => setEditMode(document.body.dataset.editMode === '1');
+    const obs = new MutationObserver(sync);
+    obs.observe(document.body, { attributes:true, attributeFilter:['data-edit-mode'] });
+    sync();
+    return () => obs.disconnect();
+  }, []);
+
+  const initial = [
+    { id:'n1',  date:'06 JUN · 2026', t:'TCO para renovação de frota', b:'Metodologia de Custo Total de Propriedade aplicada na renovação da frota — economia e comparação entre marcas.', full:'Aplicamos o TCO (Custo Total de Propriedade), metodologia trazida pelo diretor de manutenção, na renovação da frota. O estudo compara marcas de forma objetiva (aquisição + manutenção + revenda) e já gerou economia na decisão de compra.', tone:'p' },
+    { id:'n2',  date:'04 JUN · 2026', t:'Indicadores de manutenção no Power BI', b:'Frota, custo, frota auxiliar e MTR/VTR agora acompanhados em painéis de Power BI no portal.', full:'Subimos no portal o conjunto de indicadores de manutenção em Power BI: inventário de frota, custo de manutenção, frota auxiliar e MTR/VTR (máquinas e veículos retidos). Tudo acessível pela aba Indicadores.', tone:'o' },
+    { id:'n3',  date:'02 JUN · 2026', t:'Checklist de frota auxiliar', b:'Novo checklist para acompanhamento da frota auxiliar de apoio às operações.', full:'Implantamos o checklist da frota auxiliar, padronizando a verificação dos veículos de apoio e alimentando os indicadores de disponibilidade.', tone:'l' },
+    { id:'n4',  date:'30 MAI · 2026', t:'Arquitetura da nova sede', b:'Projeto de arquitetura e layout operacional da nova sede definido.', full:'Concluímos a definição de arquitetura e layout da nova sede, incluindo fluxo de veículos, boxes de manutenção e áreas de apoio.', tone:'p' },
+    { id:'n5',  date:'28 MAI · 2026', t:'Arquitetura da sede de Jacareí', b:'Layout do novo polo regional de Jacareí (Vale do Paraíba) estruturado.', full:'Definimos a arquitetura e o layout do polo de Jacareí, com inventário de frota, garagem e fluxo operacional do Vale do Paraíba.', tone:'o' },
+    { id:'n6',  date:'26 MAI · 2026', t:'Definições de regionais — caminhões e máquinas', b:'Estrutura das regionais de manutenção definida para caminhões e máquinas.', full:'Estruturamos as definições das regionais de manutenção, separando responsabilidades e cobertura para caminhões e para máquinas.', tone:'l' },
+    { id:'n7',  date:'22 MAI · 2026', t:'Acompanhamento de SLA — entrega de peças (máquinas)', b:'Indicador de SLA de entrega de peças para a manutenção de máquinas.', full:'Iniciamos o acompanhamento do SLA de entrega de peças para máquinas, medindo o tempo entre solicitação e disponibilização e seu impacto na máquina parada.', tone:'p' },
+    { id:'n8',  date:'20 MAI · 2026', t:'Solicitação de Apoio e Orçamento · Máquinas', b:'Formulário digital para solicitar apoio e orçamento para máquinas.', full:'Disponibilizamos o formulário de solicitação de apoio e orçamento para máquinas, centralizando os pedidos e dando rastreabilidade ao atendimento.', tone:'o' },
+    { id:'n9',  date:'16 MAI · 2026', t:'Ronda mensal 5S', b:'Auditoria 5S mensal nas oficinas, com pontuação e plano de ação.', full:'A ronda mensal 5S passou a ser rotina nas oficinas — checklist objetivo, pontuação e plano de ação por item, com resultados publicados.', tone:'l' },
+    { id:'n10', date:'12 MAI · 2026', t:'Mapeamento de processos: diesel e peças', b:'Processos de diesel e de peças mapeados e documentados.', full:'Mapeamos os processos de controle de diesel (abastecimento e conciliação) e de peças (entrada, baixa e consumo), base para padronização e automação.', tone:'p' },
+    { id:'n11', date:'22 ABR · 2026', t:'Digitalização dos MAPROs 100% concluída', b:'Todos os mapas de processo da manutenção agora estão disponíveis no portal, com busca, categorias e versionamento.', full:'Após meses de trabalho, finalizamos a digitalização dos MAPROs. Os mapas de processo agora estão na biblioteca digital, com busca por nome e categoria e versionamento.', tone:'o' },
+    { id:'n12', date:'10 ABR · 2026', t:'Iniciativa: SGM Follow-up diário', b:'Rotina de acompanhamento diário de caminhões e máquinas oficialmente implantada em todas as filiais.', full:'A rotina de follow-up diário do SGM agora é oficial e roda em todas as filiais. 30 minutos pela manhã, com toda a equipe operacional, revisando status, prioridades e plano do dia.', tone:'l' },
+    { id:'n13', date:'28 MAR · 2026', t:'Reunião de Manutenção 360', b:'Apresentação da visão consolidada da manutenção para toda a liderança operacional.', full:'Realizamos a reunião Manutenção 360, apresentando à liderança os principais indicadores: disponibilidade, MTTR, custo unitário e backlog.', tone:'o' },
+    { id:'n14', date:'15 MAR · 2026', t:'Padronização de POPs iniciada', b:'Revisão de todos os procedimentos operacionais da manutenção começou.', full:'Iniciamos a padronização dos POPs. Todos serão revisados, atualizados, com capa padrão e fluxograma.', tone:'p' },
   ];
+  const [posts, setPosts] = useLocalAttachments('pcm.novidades.posts.v1', initial);
+
+  const publish = () => {
+    if (!np.t.trim()) return;
+    const post = { id: 'n_' + Date.now(), date: novHoje(), t: np.t.trim(), b: np.b.trim(), full: (np.full || np.b).trim(), tone: ['p','o','l'][posts.length % 3] };
+    setPosts([post, ...posts]);
+    setNp({ t:'', b:'', full:'' });
+    setOpen(false);
+  };
+  const removePost = (id) => { if (confirm('Remover esta novidade?')) setPosts(posts.filter(p => p.id !== id)); };
 
   return (
     <div className="page">
@@ -359,8 +390,8 @@ const NovidadesPage = () => {
 
       <div className="timeline">
         {posts.map((p,i) => (
-          <Reveal key={i} delay={i*60} className={`tl-item ${p.tone === 'p' ? 'p' : p.tone === 'l' ? 'l' : ''}`}>
-            <div className="tl-card hover" style={{cursor:'pointer'}} onClick={() => setFocused(p)}>
+          <Reveal key={p.id || i} delay={i*40} className={`tl-item ${p.tone === 'p' ? 'p' : p.tone === 'l' ? 'l' : ''}`}>
+            <div className="tl-card hover" style={{cursor:'pointer',position:'relative'}} onClick={() => setFocused(p)}>
               <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:12}}>
                 <div style={{flex:1}}>
                   <div className="date">{p.date}</div>
@@ -369,19 +400,20 @@ const NovidadesPage = () => {
                 </div>
                 <div style={{color:'var(--purple-800)',fontSize:12,fontWeight:600,display:'inline-flex',alignItems:'center',gap:4,whiteSpace:'nowrap',marginTop:4}}>Ver <Icon name="arrow-right" size={12}/></div>
               </div>
+              {editMode &&
+                <button onClick={(e)=>{e.stopPropagation();removePost(p.id);}} title="Remover" style={{position:'absolute',top:8,right:8,width:24,height:24,borderRadius:6,border:'1px solid var(--line)',background:'var(--surface)',color:'var(--ink-3)',cursor:'pointer',fontSize:14,lineHeight:1}}>×</button>}
             </div>
           </Reveal>
         ))}
       </div>
 
-      <Modal open={open} onClose={() => setOpen(false)} title="Nova publicação">
-        <Field label="Título"><input placeholder="Ex.: Novo POP publicado"/></Field>
-        <Field label="Resumo"><textarea placeholder="Frase curta para o feed"/></Field>
-        <Field label="Conteúdo completo"><textarea placeholder="Detalhes da novidade"/></Field>
-        <Field label="Anexos"><Dropzone /></Field>
+      <Modal open={open} onClose={() => setOpen(false)} title="Nova publicação" desc="Aparece no topo da linha do tempo com a data de hoje.">
+        <Field label="Título"><input value={np.t} onChange={e=>setNp({...np,t:e.target.value})} placeholder="Ex.: Novo POP publicado"/></Field>
+        <Field label="Resumo"><textarea value={np.b} onChange={e=>setNp({...np,b:e.target.value})} placeholder="Frase curta para o feed"/></Field>
+        <Field label="Conteúdo completo"><textarea value={np.full} onChange={e=>setNp({...np,full:e.target.value})} placeholder="Detalhes da novidade (opcional)"/></Field>
         <div className="modal-actions">
           <button className="btn btn-ghost btn-sm" style={{background:'var(--surface-2)',color:'var(--ink)',border:'1px solid var(--line)'}} onClick={() => setOpen(false)}>Cancelar</button>
-          <button className="btn btn-solid btn-sm" onClick={() => setOpen(false)}>Publicar</button>
+          <button className="btn btn-solid btn-sm" onClick={publish}>Publicar</button>
         </div>
       </Modal>
 
