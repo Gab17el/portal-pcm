@@ -26,31 +26,17 @@ const HomePage = ({ onNav, blocks, addBlock }) =>
       </div>
 
       <Reveal className="section">
-        <SectionHead eyebrow="Últimas novidades" title="O que aconteceu no PCM" right={<button className="btn btn-outline btn-sm" onClick={() => onNav('novidades')}>Ver todas <Icon name="arrow-right" size={14} /></button>} />
+        <SectionHead eyebrow="Últimas novidades" title="O que aconteceu no PCM" />
       </Reveal>
-      <div className="grid grid-3">
-        <Reveal delay={0}>
-          <div className="card hover" style={{ padding: 22, cursor: 'pointer' }} onClick={() => onNav('novidades')}>
-            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--orange-dark)', fontWeight: 600, marginBottom: 8 }}>22 ABR · 2026</div>
-            <h3 style={{ fontSize: 17, marginBottom: 8 }}>Digitalização dos MAPROs concluída</h3>
-            <p style={{ fontSize: 13 }}>Todos os mapas de processo da manutenção agora estão disponíveis no portal.</p>
+      <Reveal>
+        <div className="card" style={{ padding: '28px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap', background: 'linear-gradient(135deg,#fff 0%, #faf6ee 100%)', borderLeft: '4px solid var(--orange)' }}>
+          <div>
+            <h3 style={{ fontSize: 18, marginBottom: 6 }}>Acompanhe tudo o que está acontecendo no PCM</h3>
+            <p style={{ fontSize: 13.5, color: 'var(--ink-2)' }}>Entregas, iniciativas, indicadores e avisos — atualizados na linha do tempo.</p>
           </div>
-        </Reveal>
-        <Reveal delay={80}>
-          <div className="card hover" style={{ padding: 22, cursor: 'pointer' }} onClick={() => onNav('novidades')}>
-            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--purple-700)', fontWeight: 600, marginBottom: 8 }}>18 ABR · 2026</div>
-            <h3 style={{ fontSize: 17, marginBottom: 8 }}>Novo dashboard de telemetria</h3>
-            <p style={{ fontSize: 13 }}>Gestão de boas práticas ao volante integrada ao Power BI.</p>
-          </div>
-        </Reveal>
-        <Reveal delay={160}>
-          <div className="card hover" style={{ padding: 22, cursor: 'pointer' }} onClick={() => onNav('novidades')}>
-            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--lime-dark)', fontWeight: 600, marginBottom: 8 }}>10 ABR · 2026</div>
-            <h3 style={{ fontSize: 17, marginBottom: 8 }}>Iniciativa: SGM Follow-up diário</h3>
-            <p style={{ fontSize: 13 }}>Rotina de acompanhamento diário de caminhões e máquinas implantada.</p>
-          </div>
-        </Reveal>
-      </div>
+          <button className="btn btn-primary" onClick={() => onNav('novidades')}>Abrir Novidades <Icon name="arrow-right" size={16} /></button>
+        </div>
+      </Reveal>
 
       {blocks.length > 0 &&
     <div className="section">
@@ -73,6 +59,63 @@ const HomePage = ({ onNav, blocks, addBlock }) =>
     </div>
   </>;
 
+
+const ClassificacaoOficinas = () => {
+  const [tab, setTab] = useState('caminhoes');
+  const tipoCor = { 1: '#16a34a', 2: '#f59e0b', 3: '#94a3b8' };
+  const tipoLbl = { 1: 'Completa', 2: 'Parcial', 3: 'Apoio' };
+  const caminhoes = [
+    { reg: 'Sede Multilixo', cor: '#f08a2a', f: [['Multilixo Matriz', 1], ['Cubatão', 2], ['Recírculo', 3], ['Multi Bio Guarulhos', 3], ['Flacipel', 3], ['Aeroporto Guarulhos/Congonhas', 3], ['Pari', 3], ['Alcântara', 3], ['Midea', 3]] },
+    { reg: 'Regional Jaguaré', cor: '#c6a700', f: [['Multilixo Jaguaré', 2], ['TWM - Itapevi', 3], ['Multilixo Ceagesp', 3], ['Multilixo Taboão', 3]] },
+    { reg: 'Regional Itupeva', cor: '#5b8fb0', f: [['Itupeva', 2], ['Multibio - Mogi Guaçu', 2], ['Sorocaba', 3], ['Campinas (Hortolândia)', 3], ['TWM - Campinas', 3], ['Lençóis Paulista', 3]] },
+    { reg: 'Regional Vale do Paraíba', cor: '#7cb342', f: [['MTL – Jacareí / Fábrica', 2], ['MTL – Suzano / Fábrica', 2], ['São José dos Campos', 3], ['Transbordo / Mult. Suzano', 3], ['MTL - Jacareí', 2]] },
+    { reg: 'Regionais Independentes', cor: '#6b5b8e', f: [['Engep Jambeiro', 2], ['UTGR - Americana', 2], ['Multibio - Tatuí', 2], ['MTL - Mucuri', 2], ['MTL - Três Lagoas', 2]] }];
+  const maquinas = [
+    { reg: 'Sede Multilixo', cor: '#f08a2a', f: [['Multilixo', 1], ['Multibio Matriz', 3], ['Flacipel', 3], ['Trata Entulho', 3], ['Multi UVR', 3], ['Ceagesp', 3], ['Jaguaré', 3], ['Pari', 3], ['TWM - Itapevi', 3], ['TWM - Campinas', 3], ['Itupeva', 3], ['Lençóis Paulista', 3], ['Sorocaba', 3], ['Tatuí', 3], ['Cubatão', 3]] },
+    { reg: 'Regional Mogi Guaçu', cor: '#c6a700', f: [['Mogi Guaçu (Geral)', 2]] },
+    { reg: 'Regional Aterros e MS', cor: '#5b8fb0', f: [['Americana', 2], ['Jambeiro', 2], ['Três Lagoas - MS', 2]] },
+    { reg: 'Regional Vale do Paraíba', cor: '#7cb342', f: [['Suzano / Fábrica', 2], ['Jacareí / Fábrica', 2], ['Caraguá', 3], ['Rechego Vale e Oeste', 3], ['Carregamento Vale Paraíba', 3]] },
+    { reg: 'Regional Mucuri', cor: '#6b5b8e', f: [['Mucuri', 2]] }];
+  const data = tab === 'caminhoes' ? caminhoes : maquinas;
+  const totalFiliais = data.reduce((s, r) => s + r.f.length, 0);
+
+  return (
+    <div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', marginBottom: 18 }}>
+        <div className="chips">
+          <button className={`chip ${tab === 'caminhoes' ? 'active' : ''}`} onClick={() => setTab('caminhoes')}>Caminhões</button>
+          <button className={`chip ${tab === 'maquinas' ? 'active' : ''}`} onClick={() => setTab('maquinas')}>Máquinas e Geradores</button>
+        </div>
+        <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', fontSize: 12, color: 'var(--ink-2)' }}>
+          {[1, 2, 3].map(t =>
+          <span key={t} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ width: 18, height: 18, borderRadius: '50%', background: tipoCor[t], color: '#fff', fontSize: 11, fontWeight: 700, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>{t}</span>
+              {tipoLbl[t]}
+            </span>)}
+          <span style={{ fontFamily: 'JetBrains Mono', color: 'var(--ink-3)' }}>{data.length} regionais · {totalFiliais} filiais</span>
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 16, alignItems: 'start' }}>
+        {data.map((r, i) =>
+        <Reveal key={r.reg} delay={i * 50}>
+            <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+              <div style={{ background: r.cor, color: '#fff', padding: '12px 16px', fontWeight: 700, fontSize: 13, letterSpacing: '0.04em', textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span>{r.reg}</span><span style={{ opacity: 0.85, fontSize: 11 }}>{r.f.length}</span>
+              </div>
+              <div style={{ padding: '8px 0' }}>
+                {r.f.map(([nome, tipo], k) =>
+                <div key={k} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, padding: '8px 16px', borderBottom: k < r.f.length - 1 ? '1px solid var(--line)' : 'none' }}>
+                    <span style={{ fontSize: 13, color: 'var(--ink)' }}>{nome}</span>
+                    <span title={tipoLbl[tipo]} style={{ flexShrink: 0, width: 22, height: 22, borderRadius: '50%', background: tipoCor[tipo], color: '#fff', fontSize: 12, fontWeight: 700, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>{tipo}</span>
+                  </div>)}
+              </div>
+            </div>
+          </Reveal>)}
+      </div>
+    </div>);
+
+};
 
 const PCMPage = () =>
 <div className="page">
@@ -173,6 +216,14 @@ const PCMPage = () =>
           </Reveal>
       )}
       </div>
+    </div>
+
+    <div className="section">
+      <SectionHead eyebrow="Estrutura da manutenção" title="Classificação de Oficinas e Filiais" />
+      <p style={{ fontSize: 14, color: 'var(--ink-2)', maxWidth: 780, marginBottom: 24 }}>
+        Tipo de oficina por filial, separado por frota (caminhões e máquinas) e regional. Tipo 1 — Completa · Tipo 2 — Parcial · Tipo 3 — Ponto de Apoio.
+      </p>
+      <ClassificacaoOficinas />
     </div>
 
     <div className="section">
