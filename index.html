@@ -20,12 +20,25 @@
 <script>window.PORTAL_API_URL = 'https://script.google.com/macros/s/AKfycbyORywoFsd_LkD5LH_fysmuTJ43OaqBcqrc3WsUeTOlqHfgEMzyuhyfbJeQQKa4BDv_/exec';</script>
 <script src="src/sync.js"></script>
 
-<script type="text/babel" src="src/icons.jsx"></script>
-<script type="text/babel" src="src/primitives.jsx"></script>
-<script type="text/babel" src="src/sidebar.jsx"></script>
-<script type="text/babel" src="src/hero.jsx"></script>
-<script type="text/babel" src="src/pages-core.jsx"></script>
-<script type="text/babel" src="src/pages-extra.jsx"></script>
-<script type="text/babel" src="src/app.jsx"></script>
+<!-- Loader anti-cache: cada visita carrega a versão mais recente dos módulos.
+     Para voltar a usar cache do navegador, troque Date.now() por um número fixo (ex.: var V = 10;) e
+     incremente esse número sempre que publicar uma alteração. -->
+<script>
+  (function () {
+    var V = Date.now();
+    var files = [
+      'src/icons.jsx',
+      'src/primitives.jsx',
+      'src/sidebar.jsx',
+      'src/hero.jsx',
+      'src/pages-core.jsx',
+      'src/pages-extra.jsx',
+      'src/app.jsx'
+    ];
+    for (var i = 0; i < files.length; i++) {
+      document.write('<script type="text/babel" src="' + files[i] + '?v=' + V + '"><\/script>');
+    }
+  })();
+</script>
 </body>
 </html>
