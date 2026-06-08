@@ -170,12 +170,78 @@ const DetailPanel = ({ item, onClose, kind }) => {
   );
 };
 
+const useEditMode = () => {
+  const [on, setOn] = useState(() => document.body.dataset.editMode === '1');
+  useEffect(() => {
+    const sync = () => setOn(document.body.dataset.editMode === '1');
+    const obs = new MutationObserver(sync);
+    obs.observe(document.body, { attributes: true, attributeFilter: ['data-edit-mode'] });
+    sync();
+    return () => obs.disconnect();
+  }, []);
+  return on;
+};
+
+const fmtData = (v) => { if (!v) return '—'; const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v); return m ? `${m[3]}/${m[2]}/${m[1]}` : v; };
+
+const WorkItemDetail = ({ item, kind, evKey, onClose, onSave, editMode }) => {
+  if (!item) return null;
+  const set = (patch) => onSave({ ...item, ...patch });
+  const infoBox = (label, node) => (
+    <div style={{ flex: '1 1 180px', minWidth: 160 }}>
+      <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--ink-3)', fontWeight: 600, marginBottom: 4 }}>{label}</div>
+      {node}
+    </div>
+  );
+  return (
+    <div className="card" style={{ padding: '32px 36px', marginBottom: 32, border: '1px solid var(--purple-100)', boxShadow: 'var(--shadow-md)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, marginBottom: 18 }}>
+        <div>
+          <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--purple-700)', fontWeight: 500, marginBottom: 8 }}>{kind}{item.s ? ' · ' + item.s : ''}</div>
+          <h2 style={{ fontSize: 28, marginBottom: 6 }}>{item.t}</h2>
+        </div>
+        <button className="btn btn-ghost btn-sm" style={{ background: 'var(--surface-2)', color: 'var(--ink)', border: '1px solid var(--line)' }} onClick={onClose}><Icon name="x" size={14} /> Fechar</button>
+      </div>
+
+      <p style={{ fontSize: 15, color: 'var(--ink-2)', marginBottom: 22, lineHeight: 1.6 }}>{item.full || item.d}</p>
+
+      {item.imp &&
+      <div style={{ padding: '14px 18px', background: 'var(--surface-2)', borderRadius: 10, borderLeft: '3px solid var(--orange)', marginBottom: 22 }}>
+          <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--ink-3)', fontWeight: 600 }}>Impacto</div>
+          <div style={{ fontSize: 15, fontWeight: 600, marginTop: 2 }}>{item.imp}</div>
+        </div>}
+
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 18, padding: '18px 20px', background: 'var(--surface-2)', borderRadius: 12, marginBottom: 26 }}>
+        {infoBox('Responsável', editMode ?
+          <input value={item.resp || ''} onChange={e => set({ resp: e.target.value })} placeholder="Nome do responsável" style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid var(--line-strong)', fontFamily: 'inherit', fontSize: 14 }} /> :
+          <div style={{ fontSize: 14, fontWeight: 600 }}>{item.resp || '—'}</div>)}
+        {infoBox('Início', editMode ?
+          <input type="date" value={item.inicio || ''} onChange={e => set({ inicio: e.target.value })} style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid var(--line-strong)', fontFamily: 'inherit', fontSize: 14 }} /> :
+          <div style={{ fontSize: 14, fontWeight: 600 }}>{fmtData(item.inicio)}</div>)}
+        {infoBox('Término', editMode ?
+          <input type="date" value={item.fim || ''} onChange={e => set({ fim: e.target.value })} style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid var(--line-strong)', fontFamily: 'inherit', fontSize: 14 }} /> :
+          <div style={{ fontSize: 14, fontWeight: 600 }}>{fmtData(item.fim)}</div>)}
+        {infoBox('Status', editMode ?
+          <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 14, cursor: 'pointer' }}>
+            <input type="checkbox" checked={!!item.done} onChange={e => set({ done: e.target.checked })} /> Concluído
+          </label> :
+          <div style={{ fontSize: 14, fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 6, color: item.done ? '#16a34a' : 'var(--ink-2)' }}>
+            {item.done ? <><Icon name="check" size={16} /> Concluído</> : 'Em andamento'}
+          </div>)}
+      </div>
+
+      <FreeContentBoard storageKey={evKey} title="Evidências" subtitle="Anexe imagens, apresentações, textos ou links especificando o que foi feito." />
+    </div>
+  );
+};
+
 const ProjetosPage = () => {
   const [filter, setFilter] = useState('Todos');
   const [open, setOpen] = useState(false);
-  const [focused, setFocused] = useState(null);
+  const [focusedId, setFocusedId] = useState(null);
+  const editMode = useEditMode();
   const cats = ['Todos', 'Concluído', 'Em andamento', 'Planejado'];
-  const projects = [
+  const seed = [
     { s:'Concluído', cls:'', t:'MAPROs Mapeadas', d:'Mapas de processo da manutenção escritos, padronizados e disponíveis no portal.', full:'Mapeamento e escrita dos MAPROs (mapas de processo) da manutenção, padronizados e centralizados no portal digital com busca e versionamento. Substituiu pastas físicas e arquivos espalhados em e-mails.', imp:'Processos mapeados e acessíveis online', who:'Gabriel Santos', area:'PCM', tone:'p', files:[{ft:'XLS',n:'MAPROs-consolidados.xlsx',s:'—'}] },
     { s:'Concluído', cls:'', t:'Follow-up diário SGM', d:'Rotina diária de checagem dos caminhões e máquinas, com indicadores em tempo real.', full:'Implementação de uma rotina diária de 30 minutos onde toda a equipe revisa o status da frota, prioriza ações e atualiza os indicadores. Reduziu drasticamente o tempo de reação a problemas.', imp:'Redução de 38% no tempo de reação', who:'Equipe PCM', area:'PCM + Operação', tone:'o' },
     { s:'Concluído', cls:'', t:'Reunião 360', d:'Reunião semanal para tratar custo, atualizações e diretrizes do PCM.', full:'Reunião semanal de manutenção (360) com a liderança para acompanhar custo, atualizações dos projetos e definir diretrizes do PCM. Apoiada pelos painéis de Power BI do portal.', imp:'Liderança alinhada toda semana', who:'Gabriel Santos', area:'PCM', tone:'l' },
@@ -193,6 +259,9 @@ const ProjetosPage = () => {
     { s:'Concluído', cls:'', t:'Indicador MTR / VTR · Envio 18h', d:'Indicador de máquinas e veículos retidos com envio automático diário às 18:00.', full:'Indicador de MTR (máquinas retidas) e VTR (veículos retidos) com envio automático por e-mail todo dia às 18:00.', imp:'Envio automático diário às 18h', who:'Gabriel Santos', area:'PCM', tone:'o' },
     { s:'Concluído', cls:'', t:'Mapeamento Multi Bio e Multilixo', d:'Mapeamento dos sistemas Oracle, SB e SISMA.', full:'Mapeamento dos processos e sistemas da Multi Bio e da Multilixo, cobrindo Oracle, SB e SISMA, para integração e padronização.', imp:'Sistemas mapeados (Oracle · SB · SISMA)', who:'Gabriel Santos', area:'PCM + TI', tone:'l' },
   ];
+  const initial = seed.map((p, idx) => ({ id: 'p' + (idx + 1), resp: p.who, inicio: '', fim: '', done: p.s === 'Concluído', ...p }));
+  const [projects, setProjects] = useLocalAttachments('pcm.projetos.v1', initial);
+  const focused = projects.find(p => p.id === focusedId) || null;
   const filtered = projects.filter(p => filter === 'Todos' || p.s === filter);
 
   return (
@@ -206,7 +275,7 @@ const ProjetosPage = () => {
         <button className="btn btn-primary" onClick={() => setOpen(true)}><Icon name="plus" size={16}/> Novo projeto</button>
       </div>
 
-      {focused && <DetailPanel item={focused} onClose={() => setFocused(null)} kind="Projeto" />}
+      {focused && <WorkItemDetail item={focused} kind="Projeto" evKey={'pcm.ev.proj.' + focused.id} onClose={() => setFocusedId(null)} onSave={(u) => setProjects(projects.map(x => x.id === u.id ? u : x))} editMode={editMode} />}
 
       <Toolbar>
         <Chips options={cats} value={filter} onChange={setFilter} />
@@ -215,7 +284,7 @@ const ProjetosPage = () => {
       <div className="grid grid-3">
         {filtered.map((p,i) => (
           <Reveal key={i} delay={i*50}>
-            <div className={`card proj-card hover ${p.tone}`} style={{cursor:'pointer'}} onClick={() => setFocused(p)}>
+            <div className={`card proj-card hover ${p.tone}`} style={{cursor:'pointer'}} onClick={() => setFocusedId(p.id)}>
               <div className={`status ${p.cls}`}><span style={{width:6,height:6,borderRadius:'50%',background:'currentColor'}}></span>{p.s}</div>
               <h3>{p.t}</h3>
               <p className="desc">{p.d}</p>
@@ -223,12 +292,8 @@ const ProjetosPage = () => {
                 <div className="lbl">Impacto</div>
                 <div className="val">{p.imp}</div>
               </div>
-              <div className="owner">
-                <div className="av">{p.who.split(' ').map(x=>x[0]).slice(0,2).join('')}</div>
-                <div style={{flex:1}}>
-                  <div className="name">{p.who}</div>
-                  <div className="sub">{p.area}</div>
-                </div>
+              <div className="owner" style={{justifyContent:'flex-end',gap:8}}>
+                {p.done && <span style={{marginRight:'auto',display:'inline-flex',alignItems:'center',gap:5,fontSize:12,fontWeight:600,color:'#16a34a'}}><Icon name="check" size={14}/> Concluído</span>}
                 <div style={{color:'var(--purple-800)',fontSize:12,fontWeight:600,display:'inline-flex',alignItems:'center',gap:4}}>Ver <Icon name="arrow-right" size={12}/></div>
               </div>
             </div>
@@ -257,9 +322,10 @@ const ProjetosPage = () => {
 };
 
 const IniciativasPage = () => {
-  const [focused, setFocused] = useState(null);
+  const [focusedId, setFocusedId] = useState(null);
   const [open, setOpen] = useState(false);
-  const items = [
+  const editMode = useEditMode();
+  const seed = [
     { t:'Quadro Visual da Oficina', d:'Implementação de quadro visual kanban para acompanhamento em tempo real das OS na oficina.', full:'Instalamos um quadro físico + digital de OS na oficina, com colunas: Fila → Em execução → Aguarda peça → Concluído. Toda a equipe contribui na atualização em tempo real, com fotos do antes/depois.', who:'Gabriel Santos', area:'Analista PCM', tone:'p' },
     { t:'Integração Planilhas → Power BI', d:'Automatização da ingestão de dados das planilhas SGM no Power BI, sem digitação manual.', full:'Antes: planilhas SGM eram preenchidas manualmente e copiadas para outras bases. Agora: scripts Power Query automatizam a ingestão diretamente do SGM para o Power BI.', who:'Gabriel Santos', area:'Analista PCM', tone:'l' },
     { t:'Padrão de Abertura de OS', d:'Criação de template único para abertura de OS, com campos obrigatórios e classificação.', full:'Criação de um padrão único de abertura de OS — campos obrigatórios, classificação ABC de criticidade e linkagem direta com o estoque de peças.', who:'Equipe PCM', area:'PCM', tone:'p' },
@@ -279,6 +345,9 @@ const IniciativasPage = () => {
     { t:'Vídeo Aulas Multilixo', d:'Treinamento em vídeo para reduzir erros operacionais por uso incorreto do sistema.', full:'Produção de vídeo aulas internas da Multilixo para treinar os usuários no uso correto do sistema, reduzindo erros operacionais. Plataforma de gravação em verificação.', who:'PCM', area:'PCM + RH', tone:'l' },
     { t:'Checklist SISMA', d:'Digitalização de inspeções preventivas e padronização de checklists no app SISMA.', full:'Proposta ASSISTE (02/2026): digitalizar as inspeções preventivas e padronizar os checklists diretamente no app SISMA.', who:'PCM + TI', area:'TI · ASSISTE', tone:'p' },
   ];
+  const initial = seed.map((p, idx) => ({ id: 'i' + (idx + 1), resp: p.who, inicio: '', fim: '', done: false, ...p }));
+  const [items, setItems] = useLocalAttachments('pcm.iniciativas.v1', initial);
+  const focused = items.find(p => p.id === focusedId) || null;
 
   return (
     <div className="page">
@@ -291,21 +360,17 @@ const IniciativasPage = () => {
         <button className="btn btn-primary" onClick={() => setOpen(true)}><Icon name="plus" size={16}/> Nova iniciativa</button>
       </div>
 
-      {focused && <DetailPanel item={focused} onClose={() => setFocused(null)} kind="Iniciativa" />}
+      {focused && <WorkItemDetail item={focused} kind="Iniciativa" evKey={'pcm.ev.init.' + focused.id} onClose={() => setFocusedId(null)} onSave={(u) => setItems(items.map(x => x.id === u.id ? u : x))} editMode={editMode} />}
 
       <div className="grid grid-3">
         {items.map((it,i) => (
           <Reveal key={i} delay={i*50}>
-            <div className={`card proj-card hover ${it.tone}`} style={{cursor:'pointer'}} onClick={() => setFocused(it)}>
-              <div className="status"><span style={{width:6,height:6,borderRadius:'50%',background:'currentColor'}}></span>Ativo</div>
+            <div className={`card proj-card hover ${it.tone}`} style={{cursor:'pointer'}} onClick={() => setFocusedId(it.id)}>
+              <div className="status">{it.done ? <><span style={{width:6,height:6,borderRadius:'50%',background:'#16a34a'}}></span>Concluído</> : <><span style={{width:6,height:6,borderRadius:'50%',background:'currentColor'}}></span>Ativo</>}</div>
               <h3>{it.t}</h3>
               <p className="desc">{it.d}</p>
-              <div className="owner">
-                <div className="av">{it.who.split(' ').map(x=>x[0]).slice(0,2).join('')}</div>
-                <div style={{flex:1}}>
-                  <div className="name">{it.who}</div>
-                  <div className="sub">{it.area}</div>
-                </div>
+              <div className="owner" style={{justifyContent:'flex-end',gap:8}}>
+                {it.done && <span style={{marginRight:'auto',display:'inline-flex',alignItems:'center',gap:5,fontSize:12,fontWeight:600,color:'#16a34a'}}><Icon name="check" size={14}/> Concluído</span>}
                 <div style={{color:'var(--purple-800)',fontSize:12,fontWeight:600,display:'inline-flex',alignItems:'center',gap:4}}>Ver <Icon name="arrow-right" size={12}/></div>
               </div>
             </div>
@@ -349,7 +414,6 @@ const NovidadesPage = () => {
   }, []);
 
   const initial = [
-    { id:'n1',  date:'06 JUN · 2026', t:'TCO para renovação de frota', b:'Metodologia de Custo Total de Propriedade aplicada na renovação da frota — economia e comparação entre marcas.', full:'Aplicamos o TCO (Custo Total de Propriedade), metodologia trazida pelo diretor de manutenção, na renovação da frota. O estudo compara marcas de forma objetiva (aquisição + manutenção + revenda) e já gerou economia na decisão de compra.', tone:'p' },
     { id:'n2',  date:'04 JUN · 2026', t:'Indicadores de manutenção no Power BI', b:'Frota, custo, frota auxiliar e MTR/VTR agora acompanhados em painéis de Power BI no portal.', full:'Subimos no portal o conjunto de indicadores de manutenção em Power BI: inventário de frota, custo de manutenção, frota auxiliar e MTR/VTR (máquinas e veículos retidos). Tudo acessível pela aba Indicadores.', tone:'o' },
     { id:'n3',  date:'02 JUN · 2026', t:'Checklist de frota auxiliar', b:'Novo checklist para acompanhamento da frota auxiliar de apoio às operações.', full:'Implantamos o checklist da frota auxiliar, padronizando a verificação dos veículos de apoio e alimentando os indicadores de disponibilidade.', tone:'l' },
     { id:'n4',  date:'30 MAI · 2026', t:'Arquitetura da nova sede', b:'Projeto de arquitetura e layout operacional da nova sede definido.', full:'Concluímos a definição de arquitetura e layout da nova sede, incluindo fluxo de veículos, boxes de manutenção e áreas de apoio.', tone:'p' },
@@ -357,14 +421,15 @@ const NovidadesPage = () => {
     { id:'n6',  date:'26 MAI · 2026', t:'Definições de regionais — caminhões e máquinas', b:'Estrutura das regionais de manutenção definida para caminhões e máquinas.', full:'Estruturamos as definições das regionais de manutenção, separando responsabilidades e cobertura para caminhões e para máquinas.', tone:'l' },
     { id:'n7',  date:'22 MAI · 2026', t:'Acompanhamento de SLA — entrega de peças (máquinas)', b:'Indicador de SLA de entrega de peças para a manutenção de máquinas.', full:'Iniciamos o acompanhamento do SLA de entrega de peças para máquinas, medindo o tempo entre solicitação e disponibilização e seu impacto na máquina parada.', tone:'p' },
     { id:'n8',  date:'20 MAI · 2026', t:'Solicitação de Apoio e Orçamento · Máquinas', b:'Formulário digital para solicitar apoio e orçamento para máquinas.', full:'Disponibilizamos o formulário de solicitação de apoio e orçamento para máquinas, centralizando os pedidos e dando rastreabilidade ao atendimento.', tone:'o' },
-    { id:'n9',  date:'16 MAI · 2026', t:'Ronda mensal 5S', b:'Auditoria 5S mensal nas oficinas, com pontuação e plano de ação.', full:'A ronda mensal 5S passou a ser rotina nas oficinas — checklist objetivo, pontuação e plano de ação por item, com resultados publicados.', tone:'l' },
     { id:'n10', date:'12 MAI · 2026', t:'Mapeamento de processos: diesel e peças', b:'Processos de diesel e de peças mapeados e documentados.', full:'Mapeamos os processos de controle de diesel (abastecimento e conciliação) e de peças (entrada, baixa e consumo), base para padronização e automação.', tone:'p' },
     { id:'n11', date:'22 ABR · 2026', t:'Digitalização dos MAPROs 100% concluída', b:'Todos os mapas de processo da manutenção agora estão disponíveis no portal, com busca, categorias e versionamento.', full:'Após meses de trabalho, finalizamos a digitalização dos MAPROs. Os mapas de processo agora estão na biblioteca digital, com busca por nome e categoria e versionamento.', tone:'o' },
     { id:'n12', date:'10 ABR · 2026', t:'Iniciativa: SGM Follow-up diário', b:'Rotina de acompanhamento diário de caminhões e máquinas oficialmente implantada em todas as filiais.', full:'A rotina de follow-up diário do SGM agora é oficial e roda em todas as filiais. 30 minutos pela manhã, com toda a equipe operacional, revisando status, prioridades e plano do dia.', tone:'l' },
-    { id:'n13', date:'28 MAR · 2026', t:'Reunião de Manutenção 360', b:'Apresentação da visão consolidada da manutenção para toda a liderança operacional.', full:'Realizamos a reunião Manutenção 360, apresentando à liderança os principais indicadores: disponibilidade, MTTR, custo unitário e backlog.', tone:'o' },
-    { id:'n14', date:'15 MAR · 2026', t:'Padronização de POPs iniciada', b:'Revisão de todos os procedimentos operacionais da manutenção começou.', full:'Iniciamos a padronização dos POPs. Todos serão revisados, atualizados, com capa padrão e fluxograma.', tone:'p' },
+    { id:'n1',  date:'20 MAR · 2026', t:'TCO para renovação de frota', b:'Metodologia de Custo Total de Propriedade aplicada na renovação da frota — economia e comparação entre marcas.', full:'Aplicamos o TCO (Custo Total de Propriedade), metodologia trazida pelo diretor de manutenção, na renovação da frota. O estudo compara marcas de forma objetiva (aquisição + manutenção + revenda) e já gerou economia na decisão de compra.', tone:'p' },
+    { id:'n14', date:'26 FEV · 2026', t:'Padronização de POPs iniciada', b:'Revisão de todos os procedimentos operacionais da manutenção começou.', full:'Iniciamos a padronização dos POPs. Todos serão revisados, atualizados, com capa padrão e fluxograma.', tone:'o' },
+    { id:'n13', date:'12 FEV · 2026', t:'Reunião de Manutenção 360', b:'Apresentação da visão consolidada da manutenção para toda a liderança operacional.', full:'Realizamos a reunião Manutenção 360, apresentando à liderança os principais indicadores: disponibilidade, MTTR, custo unitário e backlog.', tone:'l' },
+    { id:'n9',  date:'15 JAN · 2026', t:'Ronda mensal 5S', b:'Auditoria 5S mensal nas oficinas, com pontuação e plano de ação.', full:'A ronda mensal 5S passou a ser rotina nas oficinas — checklist objetivo, pontuação e plano de ação por item, com resultados publicados.', tone:'p' },
   ];
-  const [posts, setPosts] = useLocalAttachments('pcm.novidades.posts.v1', initial);
+  const [posts, setPosts] = useLocalAttachments('pcm.novidades.posts.v2', initial);
 
   const publish = () => {
     if (!np.t.trim()) return;
