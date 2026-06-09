@@ -1,4 +1,4 @@
-// Quem Somos, Projetos, Iniciativas, Novidades, Equipe — com modais e anexos
+// Quem Somos, Projetos, Iniciativas, Novidades, Equipe — with detail views and attachments
 var React = window.React;
 const { useState, useEffect } = React;
 
@@ -52,13 +52,13 @@ const QuemSomosPage = () => {
         </div>
 
         <div className="qs-diagram qs-diagram-tight">
-          <div className="qs-feature-logo" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }}>
-            <div style={{ width: 140, height: 140, borderRadius: '50%', background: 'linear-gradient(135deg, var(--purple-800) 0%, var(--orange) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', boxShadow: '0 12px 30px rgba(244, 122, 36, 0.25)', border: '6px solid #fff' }}>
-              <Icon name="leaf" size={64} />
+          <div className="qs-feature-logo">
+            <div className="qs-feature-logo-ring">
+              <img src="assets/multilixo-logo.png" alt="Grupo Multilixo" />
             </div>
-            <div className="qs-feature-stat" style={{ marginTop: -20, background: '#fff', border: '1px solid var(--purple-100)', padding: '12px 24px', borderRadius: 30, boxShadow: '0 8px 20px rgba(0,0,0,0.08)', textAlign: 'center', zIndex: 2, position: 'relative' }}>
-              <div className="qs-feature-num" style={{ fontSize: 28, fontWeight: 900, color: 'var(--purple-800)', lineHeight: 1 }}>10</div>
-              <div className="qs-feature-lbl" style={{ fontSize: 11, fontWeight: 700, color: 'var(--ink-2)', textTransform: 'uppercase', letterSpacing: '0.06em', marginTop: 4 }}>Empresas<br/>no grupo</div>
+            <div className="qs-feature-stat">
+              <div className="qs-feature-num">10</div>
+              <div className="qs-feature-lbl">Empresas<br/>do grupo</div>
             </div>
           </div>
           <div className="qs-co-grid">
@@ -123,14 +123,14 @@ const QuemSomosPage = () => {
   );
 };
 
-// Generic detail panel for an item with attachments (Modal overlay)
+// Generic detail panel for an item with attachments (Now floating as a Modal overlay)
 const DetailPanel = ({ item, onClose, kind }) => {
   if (!item) return null;
 
   useEffect(() => {
     const handleEsc = (e) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', handleEsc);
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden'; // Evita scroll da tela de fundo
     return () => {
       window.removeEventListener('keydown', handleEsc);
       document.body.style.overflow = '';
@@ -158,6 +158,7 @@ const DetailPanel = ({ item, onClose, kind }) => {
           </div>
         )}
 
+        {/* Substituído o Mock Fixo pelo FreeContentBoard real para funcionar os uploads nas Novidades */}
         <FreeContentBoard storageKey={`pcm.ev.detail.${item.id || item.t.replace(/\s+/g, '')}`} title="Fotos e Arquivos" subtitle="Anexe fotos, apresentações, PDFs ou links sobre esta novidade." />
       </div>
     </div>
@@ -178,14 +179,14 @@ const useEditMode = () => {
 
 const fmtData = (v) => { if (!v) return '—'; const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v); return m ? `${m[3]}/${m[2]}/${m[1]}` : v; };
 
-// WorkItemDetail (Modal overlay)
+// WorkItemDetail (Now floating as a Modal overlay)
 const WorkItemDetail = ({ item, kind, evKey, onClose, onSave, editMode }) => {
   if (!item) return null;
 
   useEffect(() => {
     const handleEsc = (e) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', handleEsc);
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden'; // Evita scroll da tela de fundo
     return () => {
       window.removeEventListener('keydown', handleEsc);
       document.body.style.overflow = '';
@@ -640,4 +641,25 @@ const EquipePage = ({ onNav }) => {
             <input type="range" min="0.8" max="2" step="0.05" value={editing.photoZoom||1} onChange={e=>updateField(editId,'photoZoom',parseFloat(e.target.value))} style={{width:'100%'}}/>
           </Field>
           <div style={{marginTop:16,paddingTop:14,borderTop:'1px solid var(--line)'}}>
-            <button className="btn btn-ghost btn-sm" style={{color:'#c53030',border:'1px solid #fbd5d5',background:'#fff5f5'}} onClick={()=>{remove(editId
+            <button className="btn btn-ghost btn-sm" style={{color:'#c53030',border:'1px solid #fbd5d5',background:'#fff5f5'}} onClick={()=>{remove(editId);setEditId(null);}}>Remover pessoa</button>
+          </div>
+        </>}
+      </Modal>
+
+      <Modal open={open} onClose={()=>setOpen(false)} title="Adicionar pessoa"
+        footer={<>
+          <button className="btn btn-ghost btn-sm" style={{background:'var(--surface-2)',color:'var(--ink)',border:'1px solid var(--line)'}} onClick={()=>setOpen(false)}>Cancelar</button>
+          <button className="btn btn-solid btn-sm" onClick={addPerson}>Salvar</button>
+        </>}>
+        <Field label="Nome"><input value={nf.n} onChange={e=>setNf({...nf,n:e.target.value})}/></Field>
+        <Field label="Função"><input value={nf.r} onChange={e=>setNf({...nf,r:e.target.value})}/></Field>
+        <Field label="Bio curta"><textarea rows={2} value={nf.b} onChange={e=>setNf({...nf,b:e.target.value})}/></Field>
+        <Field label="E-mail"><input type="email" value={nf.email||''} onChange={e=>setNf({...nf,email:e.target.value})} placeholder="nome.sobrenome@multilixo.com.br"/></Field>
+        <Field label="Foto"><input type="file" accept="image/*" onChange={e=>onNewPhoto(e.target.files[0])}/></Field>
+        {nf.photo && <img src={nf.photo} style={{width:80,height:80,borderRadius:8,objectFit:'cover'}}/>}
+      </Modal>
+    </div>
+  );
+};
+
+Object.assign(window, { QuemSomosPage, ProjetosPage, IniciativasPage, NovidadesPage, EquipePage });
