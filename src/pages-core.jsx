@@ -1,4 +1,4 @@
-// Home, PCM, POPs, MAPROs, Indicadores
+// Portal PCM · Multilixo — Todas as páginas consolidadas
 var React = window.React;
 const { useState, useEffect, useRef } = React;
 
@@ -612,12 +612,6 @@ const IndicadoresPage = () => {
     </div>);
 
 };
-
-Object.assign(window, { HomePage, PCMPage, POPsPage, MAPROsPage, IndicadoresPage });
-
-// Quem Somos, Projetos, Iniciativas, Novidades, Equipe — with detail views and attachments
-var React = window.React;
-const { useState, useEffect } = React;
 
 const QuemSomosPage = () => {
   const [siteUrl, setSiteUrl] = useState(() => localStorage.getItem('pcm.qs.site') || 'https://www.grupomultilixo.com.br/');
