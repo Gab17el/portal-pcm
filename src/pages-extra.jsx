@@ -123,48 +123,43 @@ const QuemSomosPage = () => {
   );
 };
 
-// Generic detail panel for an item with attachments
+// Generic detail panel for an item with attachments (Now floating as a Modal overlay)
 const DetailPanel = ({ item, onClose, kind }) => {
   if (!item) return null;
+
+  useEffect(() => {
+    const handleEsc = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handleEsc);
+    document.body.style.overflow = 'hidden'; // Evita scroll da tela de fundo
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+      document.body.style.overflow = '';
+    };
+  }, [onClose]);
+
   return (
-    <div className="card" style={{padding:'32px 36px',marginBottom:32,border:'1px solid var(--purple-100)',boxShadow:'var(--shadow-md)'}}>
-      <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:16,marginBottom:18}}>
-        <div>
-          <div style={{fontFamily:'JetBrains Mono',fontSize:11,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--purple-700)',fontWeight:500,marginBottom:8}}>{kind} · {item.date || item.s || 'Detalhes'}</div>
-          <h2 style={{fontSize:28,marginBottom:6}}>{item.t || item.title}</h2>
-          {item.who && <div style={{fontSize:13,color:'var(--ink-3)'}}>Por <strong style={{color:'var(--ink)'}}>{item.who}</strong> · {item.area}</div>}
-        </div>
-        <button className="btn btn-ghost btn-sm" style={{background:'var(--surface-2)',color:'var(--ink)',border:'1px solid var(--line)'}} onClick={onClose}><Icon name="x" size={14}/> Fechar</button>
-      </div>
-
-      <p style={{fontSize:15,color:'var(--ink-2)',marginBottom:22,lineHeight:1.6}}>{item.full || item.b || item.d || item.desc}</p>
-
-      {item.imp && (
-        <div style={{padding:'14px 18px',background:'var(--surface-2)',borderRadius:10,borderLeft:`3px solid var(--orange)`,marginBottom:22}}>
-          <div style={{fontFamily:'JetBrains Mono',fontSize:10,letterSpacing:'0.1em',textTransform:'uppercase',color:'var(--ink-3)',fontWeight:600}}>Impacto</div>
-          <div style={{fontSize:15,fontWeight:600,marginTop:2}}>{item.imp}</div>
-        </div>
-      )}
-
-      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14,marginTop:6}}>
-        <h3 style={{fontSize:16,fontWeight:700}}>Evidências e arquivos</h3>
-        <button className="btn btn-outline btn-sm"><Icon name="upload" size={14}/> Anexar</button>
-      </div>
-      <div className="grid grid-2" style={{gap:12}}>
-        {(item.files || [
-          { ft:'PDF', n:'Apresentação.pdf', s:'1.4 MB' },
-          { ft:'XLS', n:'Plano-de-acao.xlsx', s:'320 KB' },
-          { ft:'IMG', n:'Foto-evidencia-01.jpg', s:'2.1 MB' },
-        ]).map((f,i) => (
-          <div key={i} className="card pop-card hover" style={{padding:'14px 16px'}}>
-            <div className="ft-ico" style={{width:36,height:36,fontSize:10}}>{f.ft}</div>
-            <div className="body">
-              <div className="title" style={{fontSize:14}}>{f.n}</div>
-              <div className="meta"><span>{f.s}</span></div>
-            </div>
-            <div className="dl"><Icon name="download" size={14}/> Abrir</div>
+    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.6)', display: 'flex', justifyContent: 'center', alignItems: 'flex-start', padding: '5vh 20px', overflowY: 'auto', backdropFilter: 'blur(4px)' }} onClick={onClose}>
+      <div className="card" style={{ width: '100%', maxWidth: 860, margin: '0 auto', padding: '32px 36px', position: 'relative', boxShadow: '0 20px 40px rgba(0,0,0,0.2)', border: '1px solid var(--purple-100)' }} onClick={e => e.stopPropagation()}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:16,marginBottom:18}}>
+          <div>
+            <div style={{fontFamily:'JetBrains Mono',fontSize:11,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--purple-700)',fontWeight:500,marginBottom:8}}>{kind} · {item.date || item.s || 'Detalhes'}</div>
+            <h2 style={{fontSize:28,marginBottom:6}}>{item.t || item.title}</h2>
+            {item.who && <div style={{fontSize:13,color:'var(--ink-3)'}}>Por <strong style={{color:'var(--ink)'}}>{item.who}</strong> · {item.area}</div>}
           </div>
-        ))}
+          <button className="btn btn-ghost btn-sm" style={{background:'var(--surface-2)',color:'var(--ink)',border:'1px solid var(--line)'}} onClick={onClose}><Icon name="x" size={14}/> Fechar</button>
+        </div>
+
+        <p style={{fontSize:15,color:'var(--ink-2)',marginBottom:22,lineHeight:1.6}}>{item.full || item.b || item.d || item.desc}</p>
+
+        {item.imp && (
+          <div style={{padding:'14px 18px',background:'var(--surface-2)',borderRadius:10,borderLeft:`3px solid var(--orange)`,marginBottom:22}}>
+            <div style={{fontFamily:'JetBrains Mono',fontSize:10,letterSpacing:'0.1em',textTransform:'uppercase',color:'var(--ink-3)',fontWeight:600}}>Impacto</div>
+            <div style={{fontSize:15,fontWeight:600,marginTop:2}}>{item.imp}</div>
+          </div>
+        )}
+
+        {/* Substituído o Mock Fixo pelo FreeContentBoard real para funcionar os uploads nas Novidades */}
+        <FreeContentBoard storageKey={`pcm.ev.detail.${item.id || item.t.replace(/\s+/g, '')}`} title="Fotos e Arquivos" subtitle="Anexe fotos, apresentações, PDFs ou links sobre esta novidade." />
       </div>
     </div>
   );
@@ -184,8 +179,20 @@ const useEditMode = () => {
 
 const fmtData = (v) => { if (!v) return '—'; const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v); return m ? `${m[3]}/${m[2]}/${m[1]}` : v; };
 
+// WorkItemDetail (Now floating as a Modal overlay)
 const WorkItemDetail = ({ item, kind, evKey, onClose, onSave, editMode }) => {
   if (!item) return null;
+
+  useEffect(() => {
+    const handleEsc = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handleEsc);
+    document.body.style.overflow = 'hidden'; // Evita scroll da tela de fundo
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+      document.body.style.overflow = '';
+    };
+  }, [onClose]);
+
   const set = (patch) => onSave({ ...item, ...patch });
   const infoBox = (label, node) => (
     <div style={{ flex: '1 1 180px', minWidth: 160 }}>
@@ -194,43 +201,45 @@ const WorkItemDetail = ({ item, kind, evKey, onClose, onSave, editMode }) => {
     </div>
   );
   return (
-    <div className="card" style={{ padding: '32px 36px', marginBottom: 32, border: '1px solid var(--purple-100)', boxShadow: 'var(--shadow-md)' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, marginBottom: 18 }}>
-        <div>
-          <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--purple-700)', fontWeight: 500, marginBottom: 8 }}>{kind}{item.s ? ' · ' + item.s : ''}</div>
-          <h2 style={{ fontSize: 28, marginBottom: 6 }}>{item.t}</h2>
+    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.6)', display: 'flex', justifyContent: 'center', alignItems: 'flex-start', padding: '5vh 20px', overflowY: 'auto', backdropFilter: 'blur(4px)' }} onClick={onClose}>
+      <div className="card" style={{ width: '100%', maxWidth: 860, margin: '0 auto', padding: '32px 36px', position: 'relative', boxShadow: '0 20px 40px rgba(0,0,0,0.2)', border: '1px solid var(--purple-100)' }} onClick={e => e.stopPropagation()}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, marginBottom: 18 }}>
+          <div>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--purple-700)', fontWeight: 500, marginBottom: 8 }}>{kind}{item.s ? ' · ' + item.s : ''}</div>
+            <h2 style={{ fontSize: 28, marginBottom: 6 }}>{item.t}</h2>
+          </div>
+          <button className="btn btn-ghost btn-sm" style={{ background: 'var(--surface-2)', color: 'var(--ink)', border: '1px solid var(--line)' }} onClick={onClose}><Icon name="x" size={14} /> Fechar</button>
         </div>
-        <button className="btn btn-ghost btn-sm" style={{ background: 'var(--surface-2)', color: 'var(--ink)', border: '1px solid var(--line)' }} onClick={onClose}><Icon name="x" size={14} /> Fechar</button>
-      </div>
 
-      <p style={{ fontSize: 15, color: 'var(--ink-2)', marginBottom: 22, lineHeight: 1.6 }}>{item.full || item.d}</p>
+        <p style={{ fontSize: 15, color: 'var(--ink-2)', marginBottom: 22, lineHeight: 1.6 }}>{item.full || item.d}</p>
 
-      {item.imp &&
-      <div style={{ padding: '14px 18px', background: 'var(--surface-2)', borderRadius: 10, borderLeft: '3px solid var(--orange)', marginBottom: 22 }}>
+        {item.imp &&
+        <div style={{ padding: '14px 18px', background: 'var(--surface-2)', borderRadius: 10, borderLeft: '3px solid var(--orange)', marginBottom: 22 }}>
           <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--ink-3)', fontWeight: 600 }}>Impacto</div>
           <div style={{ fontSize: 15, fontWeight: 600, marginTop: 2 }}>{item.imp}</div>
         </div>}
 
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 18, padding: '18px 20px', background: 'var(--surface-2)', borderRadius: 12, marginBottom: 26 }}>
-        {infoBox('Responsável', editMode ?
-          <input value={item.resp || ''} onChange={e => set({ resp: e.target.value })} placeholder="Nome do responsável" style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid var(--line-strong)', fontFamily: 'inherit', fontSize: 14 }} /> :
-          <div style={{ fontSize: 14, fontWeight: 600 }}>{item.resp || '—'}</div>)}
-        {infoBox('Início', editMode ?
-          <input type="date" value={item.inicio || ''} onChange={e => set({ inicio: e.target.value })} style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid var(--line-strong)', fontFamily: 'inherit', fontSize: 14 }} /> :
-          <div style={{ fontSize: 14, fontWeight: 600 }}>{fmtData(item.inicio)}</div>)}
-        {infoBox('Término', editMode ?
-          <input type="date" value={item.fim || ''} onChange={e => set({ fim: e.target.value })} style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid var(--line-strong)', fontFamily: 'inherit', fontSize: 14 }} /> :
-          <div style={{ fontSize: 14, fontWeight: 600 }}>{fmtData(item.fim)}</div>)}
-        {infoBox('Status', editMode ?
-          <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 14, cursor: 'pointer' }}>
-            <input type="checkbox" checked={!!item.done} onChange={e => set({ done: e.target.checked })} /> Concluído
-          </label> :
-          <div style={{ fontSize: 14, fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 6, color: item.done ? '#16a34a' : 'var(--ink-2)' }}>
-            {item.done ? <><Icon name="check" size={16} /> Concluído</> : 'Em andamento'}
-          </div>)}
-      </div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 18, padding: '18px 20px', background: 'var(--surface-2)', borderRadius: 12, marginBottom: 26 }}>
+          {infoBox('Responsável', editMode ?
+            <input value={item.resp || ''} onChange={e => set({ resp: e.target.value })} placeholder="Nome do responsável" style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid var(--line-strong)', fontFamily: 'inherit', fontSize: 14 }} /> :
+            <div style={{ fontSize: 14, fontWeight: 600 }}>{item.resp || '—'}</div>)}
+          {infoBox('Início', editMode ?
+            <input type="date" value={item.inicio || ''} onChange={e => set({ inicio: e.target.value })} style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid var(--line-strong)', fontFamily: 'inherit', fontSize: 14 }} /> :
+            <div style={{ fontSize: 14, fontWeight: 600 }}>{fmtData(item.inicio)}</div>)}
+          {infoBox('Término', editMode ?
+            <input type="date" value={item.fim || ''} onChange={e => set({ fim: e.target.value })} style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid var(--line-strong)', fontFamily: 'inherit', fontSize: 14 }} /> :
+            <div style={{ fontSize: 14, fontWeight: 600 }}>{fmtData(item.fim)}</div>)}
+          {infoBox('Status', editMode ?
+            <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 14, cursor: 'pointer' }}>
+              <input type="checkbox" checked={!!item.done} onChange={e => set({ done: e.target.checked })} /> Concluído
+            </label> :
+            <div style={{ fontSize: 14, fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 6, color: item.done ? '#16a34a' : 'var(--ink-2)' }}>
+              {item.done ? <><Icon name="check" size={16} /> Concluído</> : 'Em andamento'}
+            </div>)}
+        </div>
 
-      <FreeContentBoard storageKey={evKey} title="Evidências" subtitle="Anexe imagens, apresentações, textos ou links especificando o que foi feito." />
+        <FreeContentBoard storageKey={evKey} title="Evidências" subtitle="Anexe imagens, apresentações, textos ou links especificando o que foi feito." />
+      </div>
     </div>
   );
 };
@@ -383,7 +392,7 @@ const IniciativasPage = () => {
         <Field label="Nome"><input placeholder="Ex.: Padrão de etiquetagem de peças"/></Field>
         <Field label="Descrição"><textarea placeholder="O que está sendo proposto?"/></Field>
         <Field label="Responsável"><input placeholder="Nome · Área"/></Field>
-        <Field label="Evidências"><Dropzone /></Field>
+        <Field label="Evidências (arquivos)"><Dropzone /></Field>
         <div className="modal-actions">
           <button className="btn btn-ghost btn-sm" style={{background:'var(--surface-2)',color:'var(--ink)',border:'1px solid var(--line)'}} onClick={() => setOpen(false)}>Cancelar</button>
           <button className="btn btn-solid btn-sm" onClick={() => setOpen(false)}>Salvar</button>
@@ -476,6 +485,7 @@ const NovidadesPage = () => {
         <Field label="Título"><input value={np.t} onChange={e=>setNp({...np,t:e.target.value})} placeholder="Ex.: Novo POP publicado"/></Field>
         <Field label="Resumo"><textarea value={np.b} onChange={e=>setNp({...np,b:e.target.value})} placeholder="Frase curta para o feed"/></Field>
         <Field label="Conteúdo completo"><textarea value={np.full} onChange={e=>setNp({...np,full:e.target.value})} placeholder="Detalhes da novidade (opcional)"/></Field>
+        <Field label="Fotos / Arquivos"><Dropzone /></Field>
         <div className="modal-actions">
           <button className="btn btn-ghost btn-sm" style={{background:'var(--surface-2)',color:'var(--ink)',border:'1px solid var(--line)'}} onClick={() => setOpen(false)}>Cancelar</button>
           <button className="btn btn-solid btn-sm" onClick={publish}>Publicar</button>
@@ -491,10 +501,10 @@ const NovidadesPage = () => {
 
 const EquipePage = ({ onNav }) => {
   const initial = [
-    { id:'t1',  n:'Julio Scalisse',        r:'Diretor de Manutenção',                      b:'Governança da diretoria de manutenção.',                                                                                          email:'julio.scalisse@multilixo.com.br',    photo:null },
-    { id:'t2',  n:'Cristiano Guertes',      r:'Gerente de Manutenção',                      b:'Planejamento de frota (caminhões).',                                                                                              email:'cristiano.guertes@multilixo.com.br', photo:null },
+    { id:'t1',  n:'Julio Scalisse',        r:'Diretor de Manutenção',                     b:'Governança da diretoria de manutenção.',                                                                        email:'julio.scalisse@multilixo.com.br',    photo:null },
+    { id:'t2',  n:'Cristiano Guertes',      r:'Gerente de Manutenção',                      b:'Planejamento de frota (caminhões).',                                                                            email:'cristiano.guertes@multilixo.com.br', photo:null },
     { id:'t3',  n:'Clayton Faneli',         r:'Gestão Estratégica · Máquinas',              b:'Gestão estratégica da manutenção de máquinas: equipes, custos, programação de serviços, indicadores e suporte técnico às operações.', email:'clayton.faneli@multilixo.com.br',    photo:null },
-    { id:'t4',  n:'Gabriel Sousa Santos',   r:'PCM · Digitalização / Processos',            b:'Digitalização, BI e PCM da diretoria de manutenção.',                                                                             email:'gabriel.santos@multilixo.com.br',    photo:null },
+    { id:'t4',  n:'Gabriel Sousa Santos',   r:'PCM · Digitalização / Processos',            b:'Digitalização, BI e PCM da diretoria de manutenção.',                                                           email:'gabriel.santos@multilixo.com.br',    photo:null },
     { id:'t5',  n:'Camila Cicone',          r:'PCM · Controle de Custos',                   b:'Controle de custos da manutenção, orçamento, análises financeiras, acompanhamento de despesas e elaboração de TCO.',                email:'camila.cicone@multilixo.com.br',     photo:null },
     { id:'t6',  n:'Thais Florentino',       r:'PCM · Governança Administrativa',            b:'Governança administrativa da manutenção, padronização de processos, análises de consumo e relatórios gerenciais.',                 email:'thais.florentino@multilixo.com.br',  photo:null },
     { id:'t7',  n:'Bruna Pereira',          r:'PCM · RH da Manutenção',                     b:'Gestão administrativa de RH da manutenção: ponto, férias, atestados, bonificações e treinamentos.',                                email:'bruna.pereira@multilixo.com.br',     photo:null },
@@ -504,8 +514,8 @@ const EquipePage = ({ onNav }) => {
     { id:'t11', n:'Maicon Rodrigues',       r:'PCM · Pneus e Lubrificantes',                b:'Gestão de pneus, lubrificantes e apoio ao planejamento das manutenções preventivas.',                                             email:'maicon.rodrigues@multilixo.com.br',  photo:null },
     { id:'t12', n:'Jonathan Rocha',         r:'Máquinas · Controle Operacional',            b:'Controle operacional da manutenção de máquinas: preventivas, telemetria, consumo de combustível, máquinas paradas, ordens de serviço e notas fiscais.', email:'jonathan.rocha@multilixo.com.br',  photo:null },
     { id:'t13', n:'Victor Silva',           r:'Máquinas · Materiais e Peças',               b:'Gestão de materiais, peças e serviços da manutenção de máquinas, acompanhando compras, fornecedores e reparos.',                   email:'',                                   photo:null },
-    { id:'t14', n:'Lucas Dias',             r:'Venda de Máquinas e Caminhões',              b:'Responsável pela venda de máquinas e caminhões.',                                                                                 email:'lucas.dias@multilixo.com.br',        photo:null },
-    { id:'t15', n:'Rodrigo Silva',          r:'Recepção Ativa / Triagem',                   b:'Responsável pela recepção ativa de caminhões e pela triagem de equipe.',                                                          email:'rodrigo.silva@multilixo.com.br',     photo:null },
+    { id:'t14', n:'Lucas Dias',             r:'Venda de Máquinas e Caminhões',              b:'Responsável pela venda de máquinas e caminhões.',                                                                                  email:'lucas.dias@multilixo.com.br',        photo:null },
+    { id:'t15', n:'Rodrigo Silva',          r:'Recepção Ativa / Triagem',                   b:'Responsável pela recepção ativa de caminhões e pela triagem de equipe.',                                                           email:'rodrigo.silva@multilixo.com.br',     photo:null },
   ];
   const [team, setTeam] = useLocalAttachments('pcm.team.v3', initial);
   const [open, setOpen] = useState(false);
