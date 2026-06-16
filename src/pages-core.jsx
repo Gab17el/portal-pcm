@@ -1,6 +1,6 @@
-// Portal PCM · Multilixo — Todas as páginas consolidadas
+// Portal PCM · Multilixo — Todas as páginas consolidadas e componentes
 var React = window.React;
-const { useState, useEffect, useRef } = React;
+const { useState, useEffect, useRef, useCallback } = React;
 
 const HomePage = ({ onNav, blocks, addBlock }) =>
 <>
@@ -734,14 +734,13 @@ const QuemSomosPage = () => {
   );
 };
 
-// Generic detail panel for an item with attachments (Now floating as a Modal overlay)
 const DetailPanel = ({ item, onClose, kind }) => {
   if (!item) return null;
 
   useEffect(() => {
     const handleEsc = (e) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', handleEsc);
-    document.body.style.overflow = 'hidden'; // Evita scroll da tela de fundo
+    document.body.style.overflow = 'hidden'; 
     return () => {
       window.removeEventListener('keydown', handleEsc);
       document.body.style.overflow = '';
@@ -789,14 +788,13 @@ const useEditMode = () => {
 
 const fmtData = (v) => { if (!v) return '—'; const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v); return m ? `${m[3]}/${m[2]}/${m[1]}` : v; };
 
-// WorkItemDetail (Now floating as a Modal overlay)
 const WorkItemDetail = ({ item, kind, evKey, onClose, onSave, editMode }) => {
   if (!item) return null;
 
   useEffect(() => {
     const handleEsc = (e) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', handleEsc);
-    document.body.style.overflow = 'hidden'; // Evita scroll da tela de fundo
+    document.body.style.overflow = 'hidden'; 
     return () => {
       window.removeEventListener('keydown', handleEsc);
       document.body.style.overflow = '';
@@ -1111,21 +1109,21 @@ const NovidadesPage = () => {
 
 const EquipePage = ({ onNav }) => {
   const initial = [
-    { id:'t1',  n:'Julio Scalisse',       r:'Diretor de Manutenção',                     b:'Governança da diretoria de manutenção.',                                                                        email:'julio.scalisse@multilixo.com.br',    photo:null },
-    { id:'t2',  n:'Cristiano Guertes',      r:'Gerente de Manutenção',                      b:'Planejamento de frota (caminhões).',                                                                             email:'cristiano.guertes@multilixo.com.br', photo:null },
-    { id:'t3',  n:'Clayton Faneli',         r:'Gestão Estratégica · Máquinas',              b:'Gestão estratégica da manutenção de máquinas: equipes, custos, programação de serviços, indicadores e suporte técnico às operações.', email:'clayton.faneli@multilixo.com.br',    photo:null },
-    { id:'t4',  n:'Gabriel Sousa Santos',   r:'PCM · Digitalização / Processos',            b:'Digitalização, BI e PCM da diretoria de manutenção.',                                                            email:'gabriel.santos@multilixo.com.br',    photo:null },
+    { id:'t1',  n:'Julio Scalisse',        r:'Diretor de Manutenção',                     b:'Governança da diretoria de manutenção.',                                                                                                            email:'julio.scalisse@multilixo.com.br',   photo:null },
+    { id:'t2',  n:'Cristiano Guertes',      r:'Gerente de Manutenção',                      b:'Planejamento de frota (caminhões).',                                                                                                                email:'cristiano.guertes@multilixo.com.br', photo:null },
+    { id:'t3',  n:'Clayton Faneli',         r:'Gestão Estratégica · Máquinas',              b:'Gestão estratégica da manutenção de máquinas: equipes, custos, programação de serviços, indicadores e suporte técnico às operações.', email:'clayton.faneli@multilixo.com.br',   photo:null },
+    { id:'t4',  n:'Gabriel Sousa Santos',   r:'PCM · Digitalização / Processos',            b:'Digitalização, BI e PCM da diretoria de manutenção.',                                                                                               email:'gabriel.santos@multilixo.com.br',   photo:null },
     { id:'t5',  n:'Camila Cicone',          r:'PCM · Controle de Custos',                   b:'Controle de custos da manutenção, orçamento, análises financeiras, acompanhamento de despesas e elaboração de TCO.',                email:'camila.cicone@multilixo.com.br',     photo:null },
     { id:'t6',  n:'Thais Florentino',       r:'PCM · Governança Administrativa',            b:'Governança administrativa da manutenção, padronização de processos, análises de consumo e relatórios gerenciais.',                 email:'thais.florentino@multilixo.com.br',  photo:null },
-    { id:'t7',  n:'Bruna Pereira',          r:'PCM · RH da Manutenção',                     b:'Gestão administrativa de RH da manutenção: ponto, férias, atestados, bonificações e treinamentos.',                               email:'bruna.pereira@multilixo.com.br',     photo:null },
-    { id:'t8',  n:'Ricardo Tavares',        r:'PCM · Sinistros / Suporte RH',               b:'Controle de opacidade, gestão de sinistros e suporte administrativo e de RH.',                                                    email:'ricardo.tavares@multilixo.com.br',   photo:null },
-    { id:'t9',  n:'Camila Silva',           r:'PCM · Combustível',                          b:'Gestão de combustível, abastecimentos, conciliações, controle de diesel e suporte às filiais.',                                   email:'camila.silva@multilixo.com.br',      photo:null },
-    { id:'t10', n:'Arnaldo Dantas',         r:'PCM · Auditoria / Ativos',                   b:'Auditoria da manutenção, controle de revisões, preventivas, notas fiscais e gestão de ativos.',                                   email:'arnaldo.dantas@multilixo.com.br',    photo:null },
-    { id:'t11', n:'Maicon Rodrigues',       r:'PCM · Pneus e Lubrificantes',                b:'Gestão de pneus, lubrificantes e apoio ao planejamento das manutenções preventivas.',                                             email:'maicon.rodrigues@multilixo.com.br',  photo:null },
+    { id:'t7',  n:'Bruna Pereira',          r:'PCM · RH da Manutenção',                     b:'Gestão administrativa de RH da manutenção: ponto, férias, atestados, bonificações e treinamentos.',                                   email:'bruna.pereira@multilixo.com.br',     photo:null },
+    { id:'t8',  n:'Ricardo Tavares',        r:'PCM · Sinistros / Suporte RH',               b:'Controle de opacidade, gestão de sinistros e suporte administrativo e de RH.',                                                                      email:'ricardo.tavares@multilixo.com.br',  photo:null },
+    { id:'t9',  n:'Camila Silva',           r:'PCM · Combustível',                          b:'Gestão de combustível, abastecimentos, conciliações, controle de diesel e suporte às filiais.',                                     email:'camila.silva@multilixo.com.br',      photo:null },
+    { id:'t10', n:'Arnaldo Dantas',         r:'PCM · Auditoria / Ativos',                   b:'Auditoria da manutenção, controle de revisões, preventivas, notas fiscais e gestão de ativos.',                                     email:'arnaldo.dantas@multilixo.com.br',    photo:null },
+    { id:'t11', n:'Maicon Rodrigues',       r:'PCM · Pneus e Lubrificantes',                b:'Gestão de pneus, lubrificantes e apoio ao planejamento das manutenções preventivas.',                                               email:'maicon.rodrigues@multilixo.com.br',  photo:null },
     { id:'t12', n:'Jonathan Rocha',         r:'Máquinas · Controle Operacional',            b:'Controle operacional da manutenção de máquinas: preventivas, telemetria, consumo de combustível, máquinas paradas, ordens de serviço e notas fiscais.', email:'jonathan.rocha@multilixo.com.br',  photo:null },
-    { id:'t13', n:'Victor Silva',           r:'Máquinas · Materiais e Peças',               b:'Gestão de materiais, peças e serviços da manutenção de máquinas, acompanhando compras, fornecedores e reparos.',                   email:'',                                   photo:null },
-    { id:'t14', n:'Lucas Dias',             r:'Venda de Máquinas e Caminhões',              b:'Responsável pela venda de máquinas e caminhões.',                                                                                email:'lucas.dias@multilixo.com.br',        photo:null },
-    { id:'t15', n:'Rodrigo Silva',          r:'Recepção Ativa / Triagem',                   b:'Responsável pela recepção ativa de caminhões e pela triagem de equipe.',                                                          email:'rodrigo.silva@multilixo.com.br',     photo:null },
+    { id:'t13', n:'Victor Silva',           r:'Máquinas · Materiais e Peças',               b:'Gestão de materiais, peças e serviços da manutenção de máquinas, acompanhando compras, fornecedores e reparos.',                    email:'',                                   photo:null },
+    { id:'t14', n:'Lucas Dias',             r:'Venda de Máquinas e Caminhões',              b:'Responsável pela venda de máquinas e caminhões.',                                                                                                   email:'lucas.dias@multilixo.com.br',        photo:null },
+    { id:'t15', n:'Rodrigo Silva',          r:'Recepção Ativa / Triagem',                   b:'Responsável pela recepção ativa de caminhões e pela triagem de equipe.',                                                                            email:'rodrigo.silva@multilixo.com.br',     photo:null },
   ];
   const [team, setTeam] = useLocalAttachments('pcm.team.v3', initial);
   const [open, setOpen] = useState(false);
@@ -1273,3 +1271,397 @@ const EquipePage = ({ onNav }) => {
 };
 
 Object.assign(window, { QuemSomosPage, ProjetosPage, IniciativasPage, NovidadesPage, EquipePage });
+
+// Generic primitives: Reveal, Modal, KPI, QuickLink, Toolbar, AddBlock, Chips
+function useReveal() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { el.classList.add('in'); io.unobserve(el); } });
+    }, { threshold: 0.12 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return ref;
+}
+
+const Reveal = ({ children, delay = 0, className = "", as: As = "div" }) => {
+  const ref = useReveal();
+  return <As ref={ref} className={`reveal ${className}`} style={{ transitionDelay: `${delay}ms` }}>{children}</As>;
+};
+
+const Modal = ({ open, onClose, title, desc, children, footer }) => {
+  useEffect(() => {
+    const esc = (e) => { if (e.key === 'Escape') onClose(); };
+    if (open) document.addEventListener('keydown', esc);
+    return () => document.removeEventListener('keydown', esc);
+  }, [open, onClose]);
+  if (!open) return null;
+  return (
+    <div className="modal-ov" onClick={onClose}>
+      <div className="modal" onClick={e => e.stopPropagation()}>
+        <h3>{title}</h3>
+        {desc && <p className="h-desc">{desc}</p>}
+        {children}
+        {footer && <div className="modal-actions">{footer}</div>}
+      </div>
+    </div>
+  );
+};
+
+const Field = ({ label, children }) => (
+  <div className="field">
+    <label>{label}</label>
+    {children}
+  </div>
+);
+
+const KPI = ({ icon, val, lbl, delta, trend = "up", tone = "p" }) => (
+  <div className={`card kpi ${tone === 'o' ? 'o' : tone === 'l' ? 'l' : ''}`}>
+    <div className="kpi-ico"><Icon name={icon} size={20} /></div>
+    <div className="kpi-val">{val}</div>
+    <div className="kpi-lbl">{lbl}</div>
+    {delta && <div className={`kpi-delta ${trend}`}>
+      <Icon name={trend === 'up' ? 'trend' : 'trend'} size={12} /> {delta}
+    </div>}
+  </div>
+);
+
+const QuickLink = ({ icon, title, desc, tone = "p", onClick }) => (
+  <div className={`card ql-card hover ${tone === 'o' ? 'o' : tone === 'l' ? 'l' : ''}`} onClick={onClick}>
+    <div className="ico"><Icon name={icon} size={22} /></div>
+    <h3>{title}</h3>
+    <p>{desc}</p>
+    <div className="arr"><Icon name="arrow-right" size={14} /></div>
+  </div>
+);
+
+const AddBlock = ({ label = "Adicionar bloco", sub = "Texto, imagem, link ou arquivo", onClick }) => (
+  <button className="add-block" onClick={onClick}>
+    <div className="plus">+</div>
+    <div className="t">{label}</div>
+    <div className="s">{sub}</div>
+  </button>
+);
+
+const Toolbar = ({ search, onSearch, children, right }) => (
+  <div className="toolbar">
+    <div style={{ display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap', flex: 1 }}>
+      {typeof search === 'string' && (
+        <div className="search">
+          <span className="s-ico"><Icon name="search" size={16} /></span>
+          <input placeholder="Buscar..." value={search} onChange={e => onSearch(e.target.value)} />
+        </div>
+      )}
+      {children}
+    </div>
+    {right && <div style={{ display: 'flex', gap: 10 }}>{right}</div>}
+  </div>
+);
+
+const Chips = ({ options, value, onChange }) => (
+  <div className="chips">
+    {options.map(o => (
+      <button key={o} className={`chip ${value === o ? 'active' : ''}`} onClick={() => onChange(o)}>{o}</button>
+    ))}
+  </div>
+);
+
+const SectionHead = ({ eyebrow, title, right }) => (
+  <div className="section-head">
+    <div>
+      {eyebrow && <div className="eyebrow">{eyebrow}</div>}
+      <h2>{title}</h2>
+    </div>
+    {right}
+  </div>
+);
+
+const Dropzone = ({ onFiles, accept = "*", label = "Arraste arquivos aqui ou clique para selecionar" }) => {
+  const ref = useRef(null);
+  const [drag, setDrag] = useState(false);
+  return (
+    <div
+      className={`dropzone ${drag ? 'dragover' : ''}`}
+      onClick={() => ref.current?.click()}
+      onDragOver={e => { e.preventDefault(); setDrag(true); }}
+      onDragLeave={() => setDrag(false)}
+      onDrop={e => { e.preventDefault(); setDrag(false); onFiles?.(Array.from(e.dataTransfer.files)); }}
+    >
+      <Icon name="upload" size={24} />
+      <div style={{ marginTop: 8, fontWeight: 600 }}>{label}</div>
+      <div style={{ fontSize: 12, color: 'var(--ink-3)', marginTop: 4 }}>PDF, Excel, Word, imagens</div>
+      <input ref={ref} type="file" multiple accept={accept} style={{ display: 'none' }} onChange={e => onFiles?.(Array.from(e.target.files))} />
+    </div>
+  );
+};
+
+Object.assign(window, { Reveal, Modal, Field, KPI, QuickLink, AddBlock, Toolbar, Chips, SectionHead, Dropzone, useReveal });
+
+/* Universal attachment system — text, image, link, PDF, PPT, Word, PBI, anything */
+const ATTACH_KINDS = [
+  { id: 'note',   icon: 'file',  label: 'Nota / Texto' },
+  { id: 'image',  icon: 'file',  label: 'Imagem' },
+  { id: 'link',   icon: 'link',  label: 'Link / URL' },
+  { id: 'embed',  icon: 'chart', label: 'Embed (Power BI, YouTube, iframe)' },
+  { id: 'file',   icon: 'file',  label: 'Arquivo (PDF, PPT, Word, Excel)' },
+];
+
+const useLocalAttachments = (key, initial = []) => {
+  const [items, setItems] = useState(() => {
+    try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : initial; } catch (e) { return initial; }
+  });
+  useEffect(() => {
+    try {
+      localStorage.setItem(key, JSON.stringify(items));
+    } catch (e) {
+      try {
+        const stripped = Array.isArray(items)
+          ? items.map(it => (it && typeof it.photo === 'string' && it.photo.startsWith('data:')) ? { ...it, photo: null } : it)
+          : items;
+        localStorage.setItem(key, JSON.stringify(stripped));
+        console.warn('[PCM] localStorage cheio: salvei sem fotos base64. Use o upload para o Drive.');
+      } catch (e2) {
+        console.error('[PCM] não foi possível salvar no localStorage', e2);
+      }
+    }
+  }, [items, key]);
+  return [items, setItems];
+};
+
+const fileToDataURL = (file) => new Promise((res) => {
+  const r = new FileReader(); r.onload = () => res(r.result); r.readAsDataURL(file);
+});
+
+const SIZE_OPTIONS = [
+  { id: 'sm',   label: 'Pequeno' },
+  { id: 'md',   label: 'Médio' },
+  { id: 'lg',   label: 'Grande' },
+  { id: 'full', label: 'Destaque (largura total)' },
+];
+
+const AttachmentEditor = ({ open, onClose, onSave, initial }) => {
+  const [kind, setKind] = useState('link');
+  const [title, setTitle] = useState('');
+  const [body, setBody] = useState('');
+  const [url, setUrl] = useState('');
+  const [embed, setEmbed] = useState('');
+  const [size, setSize] = useState('md');
+  const [textPos, setTextPos] = useState('below');
+  const [file, setFile] = useState(null);
+  const [existing, setExisting] = useState(null);
+  useEffect(() => {
+    if (initial) {
+      setKind(initial.kind || 'link');
+      setTitle(initial.title || '');
+      setBody(initial.body || initial.caption || '');
+      setUrl(initial.url || '');
+      setEmbed(initial.embed || '');
+      setSize(initial.size || 'md');
+      setTextPos(initial.textPos || 'below');
+      setExisting(initial);
+      setFile(null);
+    } else {
+      setKind('link'); setTitle(''); setBody(''); setUrl(''); setEmbed(''); setSize('md'); setTextPos('below'); setFile(null); setExisting(null);
+    }
+  }, [initial, open]);
+  const reset = () => { setKind('link'); setTitle(''); setBody(''); setUrl(''); setEmbed(''); setSize('md'); setTextPos('below'); setFile(null); setExisting(null); };
+  const uploadIfPossible = async (dataURL, filename) => {
+    if (typeof window !== 'undefined' && typeof window.PCM_UPLOAD === 'function') {
+      try {
+        const url = await window.PCM_UPLOAD(dataURL, filename);
+        if (url && typeof url === 'string' && url.indexOf('http') === 0) return url;
+      } catch (e) { console.warn('upload helper falhou, mantendo base64', e); }
+    }
+    return dataURL;
+  };
+  const save = async () => {
+    const id = existing?.id || (Date.now() + '-' + Math.random().toString(36).slice(2,7));
+    const base = { id, kind, title: title || 'Sem título', size, textPos, body, date: existing?.date || new Date().toLocaleDateString('pt-BR') };
+    if (kind === 'note')  return finish({ ...base });
+    if (kind === 'link')  return finish({ ...base, url });
+    if (kind === 'embed') return finish({ ...base, embed });
+    if (kind === 'image') {
+      if (file) {
+        const dataURL = await fileToDataURL(file);
+        const stored = await uploadIfPossible(dataURL, file.name);
+        return finish({ ...base, dataURL: stored, fileName: file.name });
+      }
+      if (existing) return finish({ ...base, dataURL: existing.dataURL, fileName: existing.fileName });
+    }
+    if (kind === 'file') {
+      if (file) {
+        const dataURL = await fileToDataURL(file);
+        const stored = await uploadIfPossible(dataURL, file.name);
+        return finish({ ...base, dataURL: stored, fileName: file.name, fileSize: file.size, fileType: file.type });
+      }
+      if (existing) return finish({ ...base, dataURL: existing.dataURL, fileName: existing.fileName, fileSize: existing.fileSize, fileType: existing.fileType });
+    }
+  };
+  const finish = (item) => { onSave(item); reset(); onClose(); };
+
+  return (
+    <Modal open={open} onClose={onClose} title={existing?'Editar conteúdo':'Adicionar conteúdo'} desc="Tipo, título, descrição e tamanho. Imagens e cards aparecem no fluxo da página."
+      footer={<>
+        <button className="btn btn-ghost btn-sm" style={{background:'var(--surface-2)',color:'var(--ink)',border:'1px solid var(--line)'}} onClick={onClose}>Cancelar</button>
+        <button className="btn btn-solid btn-sm" onClick={save}>Salvar</button>
+      </>}>
+      {!existing && <div className="kind-row">
+        {ATTACH_KINDS.map(k => (
+          <button key={k.id} className={`kind-btn ${kind===k.id?'active':''}`} onClick={()=>setKind(k.id)}>
+            <Icon name={k.icon} size={16}/> {k.label}
+          </button>
+        ))}
+      </div>}
+      <Field label="Título"><input value={title} onChange={e=>setTitle(e.target.value)} placeholder="Ex.: A Casa Multilixo, PDM 2026, Dashboard PBI..." /></Field>
+      {kind === 'link' && <Field label="URL"><input value={url} onChange={e=>setUrl(e.target.value)} placeholder="https://..." /></Field>}
+      {kind === 'embed' && <Field label="Cole o iframe ou URL embed (Power BI publish to web, YouTube embed, etc)"><textarea rows={4} value={embed} onChange={e=>setEmbed(e.target.value)} placeholder='<iframe src="..." />' /></Field>}
+      {(kind === 'image' || kind === 'file') && (
+        <Field label={kind==='image' ? (existing?'Trocar imagem (opcional)':'Imagem') : (existing?'Trocar arquivo (opcional)':'Arquivo (PDF, PPT, Word, Excel...)')}>
+          <input type="file" accept={kind==='image'?'image/*':'*'} onChange={e=>setFile(e.target.files[0])} />
+          {existing && existing.fileName && <div style={{fontSize:12,color:'var(--ink-3)',marginTop:6}}>Atual: {existing.fileName}</div>}
+        </Field>
+      )}
+      <Field label={kind==='note' ? 'Texto' : 'Descrição (texto livre — opcional)'}><textarea rows={kind==='note'?6:3} value={body} onChange={e=>setBody(e.target.value)} placeholder={kind==='note' ? 'Escreva sua nota...' : 'Adicione contexto, valores, legendas...'} /></Field>
+      <Field label="Tamanho no fluxo">
+        <div className="size-row">
+          {SIZE_OPTIONS.map(s => (
+            <button key={s.id} type="button" className={`size-btn ${size===s.id?'active':''}`} onClick={()=>setSize(s.id)}>{s.label}</button>
+          ))}
+        </div>
+      </Field>
+      {(kind==='image' || kind==='embed') && <Field label="Posição do texto">
+        <div className="size-row">
+          <button type="button" className={`size-btn ${textPos==='above'?'active':''}`} onClick={()=>setTextPos('above')}>Texto em cima</button>
+          <button type="button" className={`size-btn ${textPos==='below'?'active':''}`} onClick={()=>setTextPos('below')}>Texto embaixo</button>
+        </div>
+      </Field>}
+    </Modal>
+  );
+};
+
+const Lightbox = ({ src, alt, onClose }) => {
+  useEffect(() => {
+    const esc = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', esc);
+    return () => document.removeEventListener('keydown', esc);
+  }, [onClose]);
+  if (!src) return null;
+  return (
+    <div className="lightbox-ov" onClick={onClose}>
+      <button className="lightbox-close" onClick={onClose}>×</button>
+      <img src={src} alt={alt} onClick={(e)=>e.stopPropagation()} />
+    </div>
+  );
+};
+
+const AttachmentToolbar = ({ onEdit, onDelete }) => (
+  <div className="att-tools">
+    <button className="att-tool" title="Editar" onClick={(e)=>{e.preventDefault();e.stopPropagation();onEdit();}}><Icon name="edit" size={14}/></button>
+    <button className="att-tool" title="Remover" onClick={(e)=>{e.preventDefault();e.stopPropagation();onDelete();}}>×</button>
+  </div>
+);
+
+const AttachmentCard = ({ item, onDelete, onEdit }) => {
+  const [zoom, setZoom] = useState(false);
+  const size = item.size || 'md';
+  const textPos = item.textPos || 'below';
+  const wrapClass = `att-card att-${item.kind} att-size-${size}`;
+  const TextBlock = () => (
+    <>
+      {item.title && item.title !== 'Sem título' && <div className="att-title-text">{item.title}</div>}
+      {item.body && <div className="att-body">{item.body}</div>}
+    </>
+  );
+  if (item.kind === 'note') return (
+    <div className={wrapClass}>
+      <AttachmentToolbar onEdit={onEdit} onDelete={()=>onDelete(item.id)} />
+      <div className="att-title-text">{item.title}</div>
+      <div className="att-body">{item.body}</div>
+      <div className="att-foot">{item.date}</div>
+    </div>
+  );
+  if (item.kind === 'image') return (
+    <>
+      <div className={wrapClass}>
+        <AttachmentToolbar onEdit={onEdit} onDelete={()=>onDelete(item.id)} />
+        {textPos === 'above' && <TextBlock />}
+        <img src={item.dataURL} alt={item.title} onClick={()=>setZoom(true)} />
+        {textPos !== 'above' && <TextBlock />}
+        <div className="att-foot">{item.fileName} · {item.date}</div>
+      </div>
+      {zoom && <Lightbox src={item.dataURL} alt={item.title} onClose={()=>setZoom(false)} />}
+    </>
+  );
+  if (item.kind === 'link') return (
+    <a className={wrapClass} href={item.url} target="_blank" rel="noreferrer">
+      <AttachmentToolbar onEdit={onEdit} onDelete={()=>onDelete(item.id)} />
+      <div className="att-title-text">{item.title}</div>
+      <div className="att-url">{item.url}</div>
+      {item.body && <div className="att-body">{item.body}</div>}
+      <div className="att-foot">{item.date}</div>
+    </a>
+  );
+  if (item.kind === 'embed') return (
+    <div className={wrapClass}>
+      <AttachmentToolbar onEdit={onEdit} onDelete={()=>onDelete(item.id)} />
+      {textPos === 'above' && <TextBlock />}
+      <div className="att-embed-wrap" dangerouslySetInnerHTML={{__html: item.embed.startsWith('<') ? item.embed : `<iframe src="${item.embed}" frameborder="0" allowfullscreen></iframe>`}} />
+      {textPos !== 'above' && <TextBlock />}
+      <div className="att-foot">{item.date}</div>
+    </div>
+  );
+  if (item.kind === 'file') return (
+    <a className={wrapClass} href={item.dataURL} download={item.fileName}>
+      <AttachmentToolbar onEdit={onEdit} onDelete={()=>onDelete(item.id)} />
+      <div className="att-title-text">{item.title}</div>
+      <div className="att-file-info">
+        <div className="att-file-ico">{(item.fileName||'').split('.').pop().toUpperCase().slice(0,4)}</div>
+        <div>
+          <div className="att-file-n">{item.fileName}</div>
+          <div className="att-file-s">{item.fileSize?Math.round(item.fileSize/1024)+' KB':''} · {item.date}</div>
+        </div>
+      </div>
+      {item.body && <div className="att-body">{item.body}</div>}
+    </a>
+  );
+  return null;
+};
+
+const FreeContentBoard = ({ storageKey, title = "Conteúdo livre", subtitle = "Adicione apresentações, imagens, textos, links, PowerBI, vídeos — qualquer coisa." }) => {
+  const [items, setItems] = useLocalAttachments(storageKey, []);
+  const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState(null);
+  const upsert = (item) => {
+    setItems(prev => {
+      const idx = prev.findIndex(p => p.id === item.id);
+      if (idx >= 0) { const copy = prev.slice(); copy[idx] = item; return copy; }
+      return [...prev, item];
+    });
+  };
+  const del = (id) => setItems(items.filter(i => i.id !== id));
+  return (
+    <div className="free-board">
+      <div className="free-board-head">
+        <div>
+          <div className="eyebrow">Espaço livre</div>
+          <h3>{title}</h3>
+          <p>{subtitle}</p>
+        </div>
+      </div>
+      <div className="att-grid">
+        {items.map(it => <AttachmentCard key={it.id} item={it} onDelete={del} onEdit={()=>{setEditing(it);setOpen(true);}} />)}
+        <button className="att-add-tile" onClick={()=>{setEditing(null);setOpen(true);}}>
+          <div className="plus">+</div>
+          <div className="t">{items.length === 0 ? 'Adicionar primeiro conteúdo' : 'Adicionar mais conteúdo'}</div>
+          <div className="s">Texto · Imagem · Link · Embed · Arquivo</div>
+        </button>
+      </div>
+      <AttachmentEditor open={open} onClose={()=>{setOpen(false);setEditing(null);}} onSave={upsert} initial={editing} />
+    </div>
+  );
+};
+
+Object.assign(window, { AttachmentEditor, AttachmentCard, FreeContentBoard, useLocalAttachments, fileToDataURL });
