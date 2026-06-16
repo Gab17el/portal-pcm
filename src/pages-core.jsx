@@ -432,7 +432,7 @@ const POPsPage = () => {
     </div>);
 
 };
-// mapros 
+
 const MAPROsPage = () => {
   const [items, setItems] = useState([
     { 
@@ -499,8 +499,67 @@ const MAPROsPage = () => {
       url: './mapros/MAPRO_DIGITALIZAÇÃO MANUTENÇÃO.xlsx' 
     }
   ]);
+  const [search, setSearch] = useState('');
+  const [cat, setCat] = useState('Todas');
+  const [open, setOpen] = useState(false);
+  const cats = ['Todas', 'Gestão', 'Processo', 'Matriz de Projeto', 'Digitalização'];
+  const filtered = items.filter((p) => (cat === 'Todas' || p.b === cat) && p.t.toLowerCase().includes(search.toLowerCase()));
 
+  return (
+    <div className="page">
+      <div className="page-header">
+        <div>
+          <div className="eyebrow">Mapas de processo</div>
+          <h1>MAPROS · Matriz de Projeto</h1>
+          <p className="lead">Matrizes de projeto e mapas de processo da manutenção — abra e contribua com novos.</p>
+        </div>
+        <button className="btn btn-primary" onClick={() => setOpen(true)}><Icon name="plus" size={16} /> Novo MAPRO</button>
+      </div>
 
+      <Toolbar search={search} onSearch={setSearch}>
+        <Chips options={cats} value={cat} onChange={setCat} />
+      </Toolbar>
+
+      <div className="grid grid-2">
+        {filtered.map((p, i) =>
+        <Reveal key={i} delay={i * 40}>
+            <div className="card pop-card hover" style={{ cursor: p.url ? 'pointer' : 'default' }} onClick={() => p.url && window.open(p.url, '_blank', 'noopener')}>
+              <div className="ft-ico">{p.ft}</div>
+              <div className="body">
+                <div className="title">{p.t}</div>
+                <div className="meta">
+                  <span className="tag">{p.b}</span>
+                  <span>{p.date}</span>
+                  <span>{p.size}</span>
+                </div>
+                <div style={{ fontSize: 12, color: 'var(--ink-3)', marginTop: 4 }}>{p.s}</div>
+              </div>
+              <div className="dl"><Icon name="link" size={14} /> Abrir</div>
+            </div>
+          </Reveal>
+        )}
+        <AddBlock label="Adicionar MAPRO" sub="PDF, imagem ou diagrama" onClick={() => setOpen(true)} />
+      </div>
+
+      <Modal open={open} onClose={() => setOpen(false)} title="Novo MAPRO" desc="Anexe imagem ou PDF do fluxo.">
+        <Field label="Nome"><input placeholder="Ex.: MAPRO-07 · Compras" /></Field>
+        <Field label="Categoria">
+          <select>{cats.slice(1).map((c) => <option key={c}>{c}</option>)}</select>
+        </Field>
+        <Field label="Descrição"><textarea placeholder="Resumo do fluxo" /></Field>
+        <Field label="Arquivo"><Dropzone /></Field>
+        <div className="modal-actions">
+          <button className="btn btn-ghost btn-sm" style={{ background: 'var(--surface-2)', color: 'var(--ink)', border: '1px solid var(--line)' }} onClick={() => setOpen(false)}>Cancelar</button>
+          <button className="btn btn-solid btn-sm" onClick={() => setOpen(false)}>Salvar</button>
+        </div>
+      </Modal>
+
+      <div className="section" style={{ marginTop: 48 }}>
+        <FreeContentBoard storageKey="pcm.mapros.free" title="Conteúdo livre · MAPROs" subtitle="Versões anteriores, fluxogramas, vídeos, e qualquer material de apoio aos mapas de processo." />
+      </div>
+    </div>);
+
+};
 
 const IndicadoresPage = () => {
   const [dashboards, setDashboards] = useState([
@@ -1106,21 +1165,21 @@ const NovidadesPage = () => {
 
 const EquipePage = ({ onNav }) => {
   const initial = [
-    { id:'t1',  n:'Julio Scalisse',        r:'Diretor de Manutenção',                     b:'Governança da diretoria de manutenção.',                                                                                                            email:'julio.scalisse@multilixo.com.br',   photo:null },
-    { id:'t2',  n:'Cristiano Guertes',      r:'Gerente de Manutenção',                      b:'Planejamento de frota (caminhões).',                                                                                                                email:'cristiano.guertes@multilixo.com.br', photo:null },
+    { id:'t1',  n:'Julio Scalisse',        r:'Diretor de Manutenção',                      b:'Governança da diretoria de manutenção.',                                                                                           email:'julio.scalisse@multilixo.com.br',   photo:null },
+    { id:'t2',  n:'Cristiano Guertes',      r:'Gerente de Manutenção',                      b:'Planejamento de frota (caminhões).',                                                                                               email:'cristiano.guertes@multilixo.com.br', photo:null },
     { id:'t3',  n:'Clayton Faneli',         r:'Gestão Estratégica · Máquinas',              b:'Gestão estratégica da manutenção de máquinas: equipes, custos, programação de serviços, indicadores e suporte técnico às operações.', email:'clayton.faneli@multilixo.com.br',   photo:null },
-    { id:'t4',  n:'Gabriel Sousa Santos',   r:'PCM · Digitalização / Processos',            b:'Digitalização, BI e PCM da diretoria de manutenção.',                                                                                               email:'gabriel.santos@multilixo.com.br',   photo:null },
+    { id:'t4',  n:'Gabriel Sousa Santos',   r:'PCM · Digitalização / Processos',            b:'Digitalização, BI e PCM da diretoria de manutenção.',                                                                             email:'gabriel.santos@multilixo.com.br',   photo:null },
     { id:'t5',  n:'Camila Cicone',          r:'PCM · Controle de Custos',                   b:'Controle de custos da manutenção, orçamento, análises financeiras, acompanhamento de despesas e elaboração de TCO.',                email:'camila.cicone@multilixo.com.br',     photo:null },
     { id:'t6',  n:'Thais Florentino',       r:'PCM · Governança Administrativa',            b:'Governança administrativa da manutenção, padronização de processos, análises de consumo e relatórios gerenciais.',                 email:'thais.florentino@multilixo.com.br',  photo:null },
     { id:'t7',  n:'Bruna Pereira',          r:'PCM · RH da Manutenção',                     b:'Gestão administrativa de RH da manutenção: ponto, férias, atestados, bonificações e treinamentos.',                                   email:'bruna.pereira@multilixo.com.br',     photo:null },
-    { id:'t8',  n:'Ricardo Tavares',        r:'PCM · Sinistros / Suporte RH',               b:'Controle de opacidade, gestão de sinistros e suporte administrativo e de RH.',                                                                      email:'ricardo.tavares@multilixo.com.br',  photo:null },
+    { id:'t8',  n:'Ricardo Tavares',        r:'PCM · Sinistros / Suporte RH',               b:'Controle de opacidade, gestão de sinistros e suporte administrativo e de RH.',                                                      email:'ricardo.tavares@multilixo.com.br',  photo:null },
     { id:'t9',  n:'Camila Silva',           r:'PCM · Combustível',                          b:'Gestão de combustível, abastecimentos, conciliações, controle de diesel e suporte às filiais.',                                     email:'camila.silva@multilixo.com.br',      photo:null },
     { id:'t10', n:'Arnaldo Dantas',         r:'PCM · Auditoria / Ativos',                   b:'Auditoria da manutenção, controle de revisões, preventivas, notas fiscais e gestão de ativos.',                                     email:'arnaldo.dantas@multilixo.com.br',    photo:null },
     { id:'t11', n:'Maicon Rodrigues',       r:'PCM · Pneus e Lubrificantes',                b:'Gestão de pneus, lubrificantes e apoio ao planejamento das manutenções preventivas.',                                               email:'maicon.rodrigues@multilixo.com.br',  photo:null },
     { id:'t12', n:'Jonathan Rocha',         r:'Máquinas · Controle Operacional',            b:'Controle operacional da manutenção de máquinas: preventivas, telemetria, consumo de combustível, máquinas paradas, ordens de serviço e notas fiscais.', email:'jonathan.rocha@multilixo.com.br',  photo:null },
     { id:'t13', n:'Victor Silva',           r:'Máquinas · Materiais e Peças',               b:'Gestão de materiais, peças e serviços da manutenção de máquinas, acompanhando compras, fornecedores e reparos.',                    email:'',                                   photo:null },
-    { id:'t14', n:'Lucas Dias',             r:'Venda de Máquinas e Caminhões',              b:'Responsável pela venda de máquinas e caminhões.',                                                                                                   email:'lucas.dias@multilixo.com.br',        photo:null },
-    { id:'t15', n:'Rodrigo Silva',          r:'Recepção Ativa / Triagem',                   b:'Responsável pela recepção ativa de caminhões e pela triagem de equipe.',                                                                            email:'rodrigo.silva@multilixo.com.br',     photo:null },
+    { id:'t14', n:'Lucas Dias',             r:'Venda de Máquinas e Caminhões',              b:'Responsável pela venda de máquinas e caminhões.',                                                                                   email:'lucas.dias@multilixo.com.br',        photo:null },
+    { id:'t15', n:'Rodrigo Silva',          r:'Recepção Ativa / Triagem',                   b:'Responsável pela recepção ativa de caminhões e pela triagem de equipe.',                                                            email:'rodrigo.silva@multilixo.com.br',     photo:null },
   ];
   const [team, setTeam] = useLocalAttachments('pcm.team.v3', initial);
   const [open, setOpen] = useState(false);
