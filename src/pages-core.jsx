@@ -432,78 +432,75 @@ const POPsPage = () => {
     </div>);
 
 };
-
+// mapros 
 const MAPROsPage = () => {
   const [items, setItems] = useState([
-  { ft: 'XLS', t: 'Gestão Orçamentária', s: 'Matriz de projeto — gestão orçamentária da manutenção.', b: 'Gestão', date: '15/04/2026', size: '664 KB', url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQBxHlXYzTcPTLukXCa-a5VpAd9xZ5dGVSt9dwpIKTmSW48?e=OtAFIY' },
-  { ft: 'XLS', t: 'Mapa de Processo', s: 'Mapa de processo da manutenção.', b: 'Processo', date: '27/05/2026', size: '759 KB', url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQDEFcwk8dcOQphAb3UDOqneAdcgz_wCktElymyNFnqsHKU?e=OW5nea' },
-  { ft: 'XLS', t: 'Capacitação Técnica', s: 'Matriz de projeto — capacitação técnica da equipe.', b: 'Matriz de Projeto', date: '26/05/2026', size: '612 KB', url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQChkJm_eYgARbsGq3Mm4OMKAXWC7Q-8rRZFXc_qasCoeIg?e=dADvcV' },
-  { ft: 'XLS', t: 'Planejamento de Frota — Caminhões e Máquinas', s: 'Matriz de projeto — planejamento de manutenção da frota.', b: 'Matriz de Projeto', date: '13/05/2026', size: '2.2 MB', url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQC1gMLyU_fNTY7eSx9_rEloAfhu69H14sjov-sO33lJzGk?e=YvLQav' },
-  { ft: 'XLS', t: 'Governança da Manutenção', s: 'Matriz de projeto — governança da manutenção Multilixo.', b: 'Matriz de Projeto', date: '26/05/2026', size: '730 KB', url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQCjQyMvTrqzSpUZCc395puzAd9VtXZodzlHNZYTdk5GuTI?e=Vn1x3d' },
-  { ft: 'XLS', t: 'Máquinas Leves e Pesadas', s: 'Matriz de projeto — governança de máquinas leves e pesadas.', b: 'Matriz de Projeto', date: '23/04/2026', size: '603 KB', url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQAmPWA1TfRySo2SQDNj6jLGAedXHhwkKKmdDUnWW4UU7C0?e=7SdvTo' },
-  { ft: 'XLS', t: 'Digitalização da Manutenção', s: 'Mapa de processo da digitalização da manutenção.', b: 'Digitalização', date: '08/05/2026', size: '474 KB', url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQCFjAfCUjBSSplk9JTfuXAVARVCjCK-PmqLn4Utt3sVUT4?e=iWCp2I' }]
-  );
-  const [search, setSearch] = useState('');
-  const [cat, setCat] = useState('Todas');
-  const [open, setOpen] = useState(false);
-  const cats = ['Todas', 'Gestão', 'Processo', 'Matriz de Projeto', 'Digitalização'];
-  const filtered = items.filter((p) => (cat === 'Todas' || p.b === cat) && p.t.toLowerCase().includes(search.toLowerCase()));
+    { 
+      ft: 'XLS', 
+      t: 'Gestão Orçamentária', 
+      s: 'Matriz de projeto — gestão orçamentária da manutenção.', 
+      b: 'Gestão', 
+      date: '15/04/2026', 
+      size: '664 KB', 
+      url: './mapros/MAPRO GESTÃO ORÇAMENTÁRIA.xlsx' 
+    },
+    { 
+      ft: 'XLS', 
+      t: 'Mapa de Processo', 
+      s: 'Mapa de processo da manutenção.', 
+      b: 'Processo', 
+      date: '27/05/2026', 
+      size: '759 KB', 
+      url: './mapros/MAPRO MAPA DE PROCESSO.xlsx' 
+    },
+    { 
+      ft: 'XLS', 
+      t: 'Capacitação Técnica', 
+      s: 'Matriz de projeto — capacitação técnica da equipe.', 
+      b: 'Matriz de Projeto', 
+      date: '26/05/2026', 
+      size: '612 KB', 
+      url: './mapros/MAPRO MATRIZ DE PROJETO - CAPACITAÇÃO TÉCNICA.xlsx' 
+    },
+    { 
+      ft: 'XLS', 
+      t: 'Planejamento de Frota — Caminhões e Máquinas', 
+      s: 'Matriz de projeto — planejamento de manutenção da frota.', 
+      b: 'Matriz de Projeto', 
+      date: '13/05/2026', 
+      size: '2.2 MB', 
+      url: './mapros/MAPRO MATRIZ DE PROJETO - PLANEJAMENTO DE MANUTENÇÃO DE FROTA - CAMINHÕES.xlsx' 
+    },
+    { 
+      ft: 'XLS', 
+      t: 'Governança da Manutenção', 
+      s: 'Matriz de projeto — governança da manutenção Multilixo.', 
+      b: 'Matriz de Projeto', 
+      date: '26/05/2026', 
+      size: '730 KB', 
+      url: './mapros/MAPRO MATRIZ DE PROJETO GOV. MANUTENÇÃO MULTILIXO.xlsx' 
+    },
+    { 
+      ft: 'XLS', 
+      t: 'Máquinas Leves e Pesadas', 
+      s: 'Matriz de projeto — governança de máquinas leves e pesadas.', 
+      b: 'Matriz de Projeto', 
+      date: '23/04/2026', 
+      size: '603 KB', 
+      url: './mapros/MAPRO MATRIZ DE PROJETO GOV. MAquinas pesadas.xlsx' 
+    },
+    { 
+      ft: 'XLS', 
+      t: 'Digitalização da Manutenção', 
+      s: 'Mapa de processo da digitalização da manutenção.', 
+      b: 'Digitalização', 
+      date: '08/05/2026', 
+      size: '474 KB', 
+      url: './mapros/MAPRO_DIGITALIZAÇÃO MANUTENÇÃO.xlsx' 
+    }
+  ]);
 
-  return (
-    <div className="page">
-      <div className="page-header">
-        <div>
-          <div className="eyebrow">Mapas de processo</div>
-          <h1>MAPROS · Matriz de Projeto</h1>
-          <p className="lead">Matrizes de projeto e mapas de processo da manutenção — abra e contribua com novos.</p>
-        </div>
-        <button className="btn btn-primary" onClick={() => setOpen(true)}><Icon name="plus" size={16} /> Novo MAPRO</button>
-      </div>
 
-      <Toolbar search={search} onSearch={setSearch}>
-        <Chips options={cats} value={cat} onChange={setCat} />
-      </Toolbar>
-
-      <div className="grid grid-2">
-        {filtered.map((p, i) =>
-        <Reveal key={i} delay={i * 40}>
-            <div className="card pop-card hover" style={{ cursor: p.url ? 'pointer' : 'default' }} onClick={() => p.url && window.open(p.url, '_blank', 'noopener')}>
-              <div className="ft-ico">{p.ft}</div>
-              <div className="body">
-                <div className="title">{p.t}</div>
-                <div className="meta">
-                  <span className="tag">{p.b}</span>
-                  <span>{p.date}</span>
-                  <span>{p.size}</span>
-                </div>
-                <div style={{ fontSize: 12, color: 'var(--ink-3)', marginTop: 4 }}>{p.s}</div>
-              </div>
-              <div className="dl"><Icon name="link" size={14} /> Abrir</div>
-            </div>
-          </Reveal>
-        )}
-        <AddBlock label="Adicionar MAPRO" sub="PDF, imagem ou diagrama" onClick={() => setOpen(true)} />
-      </div>
-
-      <Modal open={open} onClose={() => setOpen(false)} title="Novo MAPRO" desc="Anexe imagem ou PDF do fluxo.">
-        <Field label="Nome"><input placeholder="Ex.: MAPRO-07 · Compras" /></Field>
-        <Field label="Categoria">
-          <select>{cats.slice(1).map((c) => <option key={c}>{c}</option>)}</select>
-        </Field>
-        <Field label="Descrição"><textarea placeholder="Resumo do fluxo" /></Field>
-        <Field label="Arquivo"><Dropzone /></Field>
-        <div className="modal-actions">
-          <button className="btn btn-ghost btn-sm" style={{ background: 'var(--surface-2)', color: 'var(--ink)', border: '1px solid var(--line)' }} onClick={() => setOpen(false)}>Cancelar</button>
-          <button className="btn btn-solid btn-sm" onClick={() => setOpen(false)}>Salvar</button>
-        </div>
-      </Modal>
-
-      <div className="section" style={{ marginTop: 48 }}>
-        <FreeContentBoard storageKey="pcm.mapros.free" title="Conteúdo livre · MAPROs" subtitle="Versões anteriores, fluxogramas, vídeos, e qualquer material de apoio aos mapas de processo." />
-      </div>
-    </div>);
-
-};
 
 const IndicadoresPage = () => {
   const [dashboards, setDashboards] = useState([
