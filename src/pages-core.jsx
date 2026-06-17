@@ -442,7 +442,7 @@ const MAPROsPage = () => {
       b: 'Gestão', 
       date: '15/04/2026', 
       size: '664 KB', 
-      url: './mapros/MAPRO GESTÃO ORÇAMENTÁRIA.xlsx' 
+      url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQDlxqGxby0ZRpvHbwhYbyREAZoDWm92Gpr8hBk-y1cBXxU?e=iL6Ejf' 
     },
     { 
       ft: 'XLS', 
@@ -451,7 +451,7 @@ const MAPROsPage = () => {
       b: 'Processo', 
       date: '27/05/2026', 
       size: '759 KB', 
-      url: './mapros/MAPRO MAPA DE PROCESSO.xlsx' 
+      url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQByMpsg2lddSbmq35ftbh0AAaKkruDccQI0IovEcw-DnSE?e=3fT6hd' 
     },
     { 
       ft: 'XLS', 
@@ -460,7 +460,7 @@ const MAPROsPage = () => {
       b: 'Matriz de Projeto', 
       date: '26/05/2026', 
       size: '612 KB', 
-      url: './mapros/MAPRO MATRIZ DE PROJETO - CAPACITAÇÃO TÉCNICA.xlsx' 
+      url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQCnMh8I-kDGTJEFCBLuScYWAQYpCtvIaXOHBYiXTlJc_N8?e=fO5OYz' 
     },
     { 
       ft: 'XLS', 
@@ -469,7 +469,7 @@ const MAPROsPage = () => {
       b: 'Matriz de Projeto', 
       date: '13/05/2026', 
       size: '2.2 MB', 
-      url: './mapros/MAPRO MATRIZ DE PROJETO - PLANEJAMENTO DE MANUTENÇÃO DE FROTA - CAMINHÕES.xlsx' 
+      url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQDcUiZXOQIpRKDrXgfLD3PrARyFHjRhXTxvswJRBTZ8eZc?e=9S6S4J' 
     },
     { 
       ft: 'XLS', 
@@ -478,7 +478,7 @@ const MAPROsPage = () => {
       b: 'Matriz de Projeto', 
       date: '26/05/2026', 
       size: '730 KB', 
-      url: './mapros/MAPRO MATRIZ DE PROJETO GOV. MANUTENÇÃO MULTILIXO.xlsx' 
+      url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQBPCAAJrTaHRY721R9PBKGZAbkI_DdShRtl2hlyqDqRlPk?e=vzMHXA' 
     },
     { 
       ft: 'XLS', 
@@ -487,7 +487,7 @@ const MAPROsPage = () => {
       b: 'Matriz de Projeto', 
       date: '23/04/2026', 
       size: '603 KB', 
-      url: './mapros/MAPRO MATRIZ DE PROJETO GOV. MAquinas pesadas.xlsx' 
+      url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQDnR6lWvUlXT5Yn7Ghv8xshAecdiu7vlwwT4qJEsKcY63c?e=DnDvWJ' 
     },
     { 
       ft: 'XLS', 
@@ -496,7 +496,7 @@ const MAPROsPage = () => {
       b: 'Digitalização', 
       date: '08/05/2026', 
       size: '474 KB', 
-      url: './mapros/MAPRO_DIGITALIZAÇÃO MANUTENÇÃO.xlsx' 
+      url: 'https://grmultilixo-my.sharepoint.com/:x:/g/personal/gabriel_santos_multilixo_com_br/IQAQCgr3EWj0Ran2m8PyC0w5ARDoEgMCYE7MNUoKcMx8E4w?e=lN8nl8' 
     }
   ]);
   const [search, setSearch] = useState('');
